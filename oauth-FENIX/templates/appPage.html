@@ -1,4 +1,53 @@
 <!doctype html>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css"  href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.css">
+<script  src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.js">  </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-xmlrpc/0.4.3/jquery.xmlrpc.js"> </script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<link href="https://vjs.zencdn.net/7.8.4/video-js.css" rel="stylesheet" />
+<script src="http://vjs.zencdn.net/7.8.4/video.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/2.6.1/Youtube.min.js"></script>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+  body, html {
+    height: 100%;
+    margin: 0;
+  }
+
+  .bg {
+    /* The image used */
+    background-image: url('https://i.ytimg.com/vi/1waNpmtYSIM/maxresdefault.jpg');
+
+    /* Full height */
+    height: 100%;
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  #button {
+  display: inline-block;
+  background-color: rgb(150, 52, 48);
+  width: 160px;
+  height: 80px;
+  text-align: center;
+  border-radius: 4px;
+  margin: 30px;
+  position: fixed;
+  bottom: 800px;
+  right: 30px;
+  transition: background-color .3s;
+  z-index: 1000;
+  font-size: 40px;
+}
+  </style>
+
+  </head>
+<body>
 <title>{% block title %}{% endblock %} - Flask</title>
 
 {% if loggedIn %}
@@ -6,13 +55,21 @@ User logged in
 <br>
 <a href="{{ url_for("private_page") }}"> Private part of the site (needs auth)</a>
 <br>
-<a href="{{ url_for("logout") }}"> Logout</a>
+<button id="button" onclick="window.location='{{ url_for("logout") }}'" >
+  Logout
+</button>
+<!-- <a href="{{ url_for("logout") }}"> Logout</a> -->
 
 
 {% else %}
-<a href="{{ url_for("fenix-example.login") }}">Login with OAuth Example</a>
+
+<div class="bg">
+  <!-- <a href="{{ url_for("fenix-example.login") }}">Login with OAuth Exampleeeee</a> -->
+  <button id="button" onclick="window.location='{{ url_for("fenix-example.login") }}'" >
+    Login
+  </button>
+</div>
 
 {% endif %}
-<body>
 
   </body>

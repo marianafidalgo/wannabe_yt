@@ -81,6 +81,11 @@
                 // and pass those values to the addNewVideo function
 
             })
+
+            $("#buttonPlayVideo").click(function(){
+              videoID = $("#playVideoID").val()
+              window.location.href = "static/videoPage.html?" + videoID;
+            })
         });
 
     </script>
@@ -111,6 +116,15 @@
     <button class="ui button" id="buttonAddVideo">
       Add new Video
     </button>
+
+    <h3>Play Video</h3>
+    <div class="ui input">
+      <input type="text" placeholder="Video id" id="playVideoID">
+    </div>
+    <button class="ui button" id="buttonPlayVideo">
+      Play
+    </button>
+    <br>
 
   </body>
 

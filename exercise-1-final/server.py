@@ -45,8 +45,6 @@ def newView(id):
         abort(404)
 
 
-
-
 @app.route("/")
 def index():
     return app.send_static_file('videoListing.html')

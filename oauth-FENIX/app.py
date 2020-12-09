@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from flask import Flask
 from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask import redirect
@@ -55,7 +56,6 @@ def logout():
     # when the browser is redirected to home page it is not logged in anymore
     return redirect(url_for("home_page"))
 
-    
 
 @app.route('/private')
 def private_page():
@@ -69,7 +69,7 @@ def private_page():
         #if the user is authenticated then a request to FENIX is made
         resp = fenix_blueprint.session.get("/api/fenix/v1/person/")
         #resp contains the response made to /api/fenix/vi/person (information about current user)
-        data = resp.json() 
+        data = resp.json()
         print(resp.json())
         return render_template("privPage.html", username=data['username'], name=data['name'])
 
@@ -77,4 +77,3 @@ def private_page():
 
 if __name__ == '__main__':
     app.run(debug=True)
- 
