@@ -10,7 +10,7 @@ from os import path
 
 
 #SLQ access layer initialization
-DATABASE_FILE = "ytVideos.sqlite"
+DATABASE_FILE = "users.sqlite"
 db_exists = False
 if path.exists(DATABASE_FILE):
     db_exists = True
@@ -21,17 +21,17 @@ engine = create_engine('sqlite:///%s'%(DATABASE_FILE), echo=False) #echo = True 
 Base = declarative_base()
 
 #Declaration of data
-class YTVideo(Base):
-    __tablename__ = 'YTVideo'
+class Users(Base):
+    __tablename__ = 'Users'
     id = Column(Integer, primary_key=True)
-    description = Column(String)
-    url = Column(String)
-    views = Column(Integer, default = 0)
+    number = Column(String)
+    name = Column(String)
+    role = Column(String)
     def __repr__(self):
-        return "<YouTubeVideo (id=%d Description=%s, URL=%s, Views=%s>" % (
-                                self.id, self.description, self.url,  self.views)
+        return "<User (id=%d, number=%s, name=%s, role=%s>" % (
+                                self.id, self.number, self.name, self.role)
     def to_dictionary(self):
-        return {"video_id": self.id, "description": self.description, "url": self.url, "views": self.views}
+        return {"user_id": self.id, "number": self.number, "name": self.name, "role": self.role}
 
 
 Base.metadata.create_all(engine) #Create tables for the data models
@@ -41,8 +41,8 @@ session = scoped_session(Session)
 #session = Session()
 
 
-def listVideos():
-    return session.query(YTVideo).all()
+def listUsers():
+    return session.query(Users).all()
     session.close()
 
 def listVideosDICT():
@@ -55,29 +55,20 @@ def listVideosDICT():
         ret_list.append(vd)
     return ret_list
 
-def getVideo(id):
-     v =  session.query(YTVideo).filter(YTVideo.id==id).first()
+def getUser(number):
+     v =  session.query(Users).filter(Users.number==number).scalar()
      session.close()
      return v
 
-def getVideoDICT(id):
-    return getVideo(id).to_dictionary()
+def getUserDICT(id):
+    return getUser(id).to_dictionary()
 
-def newVideoView(id):
-    b = session.query(YTVideo).filter(YTVideo.id==id).first()
-    b.views+=1
-    n = b.views
-    session.commit()
-    session.close()
-    return n
-
-
-def newVideo(description , url):
-    vid = YTVideo(description = description, url = url)
+def newUser(number, name, role):
+    uid = Users(number = number, name = name, role = role)
     try:
-        session.add(vid)
+        session.add(uid)
         session.commit()
-        v = vid.id
+        v = uid.id
         session.close()
         return v
     except:

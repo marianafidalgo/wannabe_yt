@@ -4,8 +4,11 @@ from flask_dance.consumer import OAuth2ConsumerBlueprint
 from flask import redirect
 from flask import render_template
 from flask import request
-from flask import jsonify, url_for
+from flask import json
+from flask import jsonify, url_for, abort
 from flask import session
+
+from user_DB import *
 
 
 import requests
@@ -39,9 +42,44 @@ app.register_blueprint(fenix_blueprint)
 @app.route('/')
 def home_page():
     # The access token is generated everytime the user authenticates into FENIX
-    print(fenix_blueprint.session.authorized)
-    print("Access token: "+ str(fenix_blueprint.session.access_token))
-    return render_template("appPage.html", loggedIn = fenix_blueprint.session.authorized)
+    # print(fenix_blueprint.session.authorized)
+    # print("Access token: "+ str(fenix_blueprint.session.access_token))
+    # return render_template("appPage.html", loggedIn = fenix_blueprint.session.authorized)
+    if fenix_blueprint.session.authorized == False:
+        #if not logged in browser is redirected to login page (in this case FENIX handled the login)
+        return render_template("appPage.html", loggedIn = fenix_blueprint.session.authorized)
+    else:
+        #if the user is authenticated then a request to FENIX is made
+        resp = fenix_blueprint.session.get("/api/fenix/v1/person/")
+        #resp contains the response made to /api/fenix/vi/person (information about current user)
+        data = resp.json()
+        #send to DB
+        print("hey bd")
+        print(getUser(data["username"]))
+        if(getUser(data["username"]) is None):
+            ret = False
+            try:
+                if(data["username"] == "ist187077" or data["username"] == "ist187074"):
+                    print("Hello admin")
+                    ret = newUser(data["username"],data["name"], "admin")
+                else:
+                    print("Hello user")
+                    ret = newUser(data["username"],data["name"], "user")
+            except:
+                abort(400)
+        #send to proxy!!!
+        return redirect(url_for('user', id =data['username'], name=data['name']))
+
+
+@app.route('/user/<id>/<name>',methods=['GET','POST'])
+def user(id, name):
+    paras = json.dumps({"id":id,"name":name})
+    response = requests.post('http://127.0.0.1:7000/user_proxy',data=paras)
+    print(response.status_code)
+    if(response.status_code == 200 ):
+        return redirect('http://127.0.0.1:7000/u_VQA')
+    else:
+        return "Error"
 
 
 

@@ -13,6 +13,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/2.6.1/Youtube.min.js"></script>
 
     <script>
+        name = decodeURIComponent(window.location.search);
+        name = name.substring(1);
+        console.log(name);
 
         function getVideoViews(videoID){
           $.ajax({
@@ -64,6 +67,7 @@
             });
         }
         $(document).ready(function(){
+          $("#hello").html("Welcome, " + name);
           updateVideostable()
           $("#buttonUpdateVideotable").click(
             //TODO 1 - configure the $("#buttonUpdateVideotable")
@@ -92,6 +96,9 @@
 
   </head>
   <body>
+  </br>
+    <h2 id="hello"></h2>
+  </br>
     <h3>List of videos</h3>
     <table class="ui celled table selectable" id="videosTable" >
       <thead>
@@ -125,7 +132,9 @@
       Play
     </button>
     <br>
-
+    <button class="ui button" onclick="window.location='{{ url_for("logout") }}'">
+      Logout
+    </button>
   </body>
 
 </html>

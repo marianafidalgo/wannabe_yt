@@ -4,6 +4,13 @@ from Video_DB import *
 from time import sleep
 app = Flask(__name__)
 
+
+@app.route("/logout")
+def logout():
+    print("log1")
+    return redirect('http://127.0.0.1:7000/logout')
+
+
 @app.route("/API/videos/", methods=['GET'])
 def returnsVideosJSON():
     return {"videos": listVideosDICT()}
@@ -23,17 +30,20 @@ def createNewVideo():
     sleep(0.1)
     j = request.get_json()
     print (type(j))
-    ret = False
-    try:
-        print(j["description"])
-        ret = newVideo(j["description"], j["url"])
-    except:
-        abort(400)
-        #the arguments were incorrect
-    if ret:
-        return {"id": ret}
+    if(getUser(j["url"]) is None):
+        ret = False
+        try:
+            print(j["description"])
+            ret = newVideo(j["description"], j["url"])
+        except:
+            abort(400)
+            #the arguments were incorrect
+        if ret:
+            return {"id": ret}
+        else:
+            abort(409)
     else:
-        abort(409)
+        print("Video already exists")
     #if there is an erro return ERROR 409
 
 
@@ -50,4 +60,4 @@ def index():
     return app.send_static_file('videoListing.html')
 
 if __name__ == "__main__":
-   app.run(host='0.0.0.0', port=8000, debug=True)
+   app.run(host='127.0.0.1', port=8000, debug=True)

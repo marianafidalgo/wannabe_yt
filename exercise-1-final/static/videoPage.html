@@ -1,11 +1,13 @@
-
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css"  href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.css">
-    <script  src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.js">  </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-xmlrpc/0.4.3/jquery.xmlrpc.js"> </script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.css">
+    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-xmlrpc/0.4.3/jquery.xmlrpc.js">
+    </script>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
     <link href="https://vjs.zencdn.net/7.8.4/video-js.css" rel="stylesheet" />
@@ -16,77 +18,78 @@
         id = decodeURIComponent(window.location.search);
         id = id.substring(1);
         console.log(id);
-        $(document).ready(function(){
+        $(document).ready(function() {
             var vPlayer = videojs('videoPlayer');
-            vPlayer.src({ "type": "video/youtube", "src": "https://www.youtube.com/watch?v=xjS6SftYQaQ"});
+            vPlayer.src({
+                "type": "video/youtube",
+                "src": "https://www.youtube.com/watch?v=xjS6SftYQaQ"
+            });
             vPlayer.play()
 
-            $("#buttonVideoPause").click(function(){
+            $("#buttonVideoPause").click(function() {
                 vPlayer.pause()
                 var pauseTime = vPlayer.currentTime()
                 console.log(pauseTime)
                 $("#resumetime").val(pauseTime)
 
-             })
-            $("#buttonVideoResume").click(function(){
-                vPlayer.currentTime( parseFloat($("#resumetime").val()))
-                vPlayer.play()
             })
-              //TODO 6 - get the value of #playVideoID
+            $("#buttonVideoResume").click(function() {
+                    vPlayer.currentTime(parseFloat($("#resumetime").val()))
+                    vPlayer.play()
+                })
+                //TODO 6 - get the value of #playVideoID
 
-              $.ajax({
+            $.ajax({
                 //TODO 7 - retrieve the corresponding URL by
-              //        calling the /videos/<id>/ REST endpoint)
-                url: '/API/videos/'+id+'/',
+                //        calling the /videos/<id>/ REST endpoint)
+                url: '/API/videos/' + id + '/',
                 type: "GET",
                 dataType: "json",
-                success: function (data) {
-                  console.log(data)
-                  url = data["url"]
-                  console.log(url)
-                  //TODO 8 - update the player with the url retrieved
-                  vPlayer.src({ "type": "video/youtube", "src": url});
-                  vPlayer.play()
+                success: function(data) {
+                    console.log(data)
+                    url = data["url"]
+                    console.log(url)
+                        //TODO 8 - update the player with the url retrieved
+                    vPlayer.src({
+                        "type": "video/youtube",
+                        "src": url
+                    });
+                    vPlayer.play()
 
-                  $.ajax({
-                    //TODO 9 - increase the number of views
-                    url: '/API/videos/'+id+'/views',
-                    type: "PUT",
-                    dataType: "json",
-                    success: function (data) {
-                      console.log(data)
-                    }
-                  })
+                    $.ajax({
+                        //TODO 9 - increase the number of views
+                        url: '/API/videos/' + id + '/views',
+                        type: "PUT",
+                        dataType: "json",
+                        success: function(data) {
+                            console.log(data)
+                        }
+                    })
                 }
-              });
+            });
 
-               // TODO 11 - update the table
+            // TODO 11 - update the table
 
         });
-
     </script>
 
-  </head>
-  <body>
-   
+</head>
 
-    <video  id="videoPlayer" controls
-            class="video-js vjs-default-skin"
-            width="640"
-            data-setup='{ "autoplay": true, "preload": "auto", "techOrder": ["youtube"], "sources": [{ "type": "video/youtube" }'
-    >
+<body>
+
+    <video id="videoPlayer" controls class="video-js vjs-default-skin" width="640" data-setup='{ "autoplay": true, "preload": "auto", "techOrder": ["youtube"], "sources": [{ "type": "video/youtube" }'>
     </video>
     <h3>Control Video</h3>
     <button class="ui button" id="buttonVideoPause">
      PAUSE Video
     </button>
-    <div class="ui input focus" >
-      <input type="text" id="resumetime">
+    <div class="ui input focus">
+        <input type="text" id="resumetime">
     </div>
     <button class="ui button" id="buttonVideoResume">
       RESUME Video
     </button>
 
-  </body>
+</body>
 
 </html>
