@@ -13,12 +13,37 @@
     <link href="https://vjs.zencdn.net/7.8.4/video-js.css" rel="stylesheet" />
     <script src="http://vjs.zencdn.net/7.8.4/video.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/2.6.1/Youtube.min.js"></script>
-    
-  
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
     <script>
         id = decodeURIComponent(window.location.search);
         id = id.substring(1);
         console.log(id);
+
+        function addNewQuestion(time, question) {
+            // TODO 4 - create an object (requestData) that contains the url and descrition
+            // look at the server to understand what data should be sent.
+            let requestData = {
+                "time": time,
+                'question': question
+            }
+            $.ajax({
+                url: '/API/videos/QA',
+                type: "POST",
+                dataType: "json",
+                contentType: 'application/json',
+                data: JSON.stringify(requestData),
+                success: function(data) {
+                    //TODO 5 after creating the video update the table
+                    console.log("resppnse for video creation" + data)
+                    console.log(data)
+                    updateQuestiontable()
+                }
+            });
+        }
+
         $(document).ready(function() {
             var vPlayer = videojs('videoPlayer');
             vPlayer.src({
@@ -39,7 +64,6 @@
                     vPlayer.play()
                 })
                 //TODO 6 - get the value of #playVideoID
-
             $.ajax({
                 //TODO 7 - retrieve the corresponding URL by
                 //        calling the /videos/<id>/ REST endpoint)
@@ -70,7 +94,7 @@
                 }
             });
 
-            function updateVideostable() {
+            function updateQuestiontable() {
                 $.ajax({
                     url: '/API/videos/',
                     type: "GET",
@@ -88,6 +112,13 @@
             }
 
             // TODO 11 - update the table
+            $("#buttonAddQuestion").click(function() {
+                newTime = $("#newTime").val()
+                newQuestion = $("#newQuestion").val()
+                addNewQuestion(newTime, newQuestion)
+                    //TODO 3 - get the values of #newVideoURL and newVideoDescription
+                    // and pass those values to the addNewVideo function
+            })
 
         });
     </script>
@@ -95,27 +126,44 @@
 </head>
 
 <body>
-    <h1 id="desc"></h1>
-    <div class="display:inline-block">
-        <video id="videoPlayer" controls class="video-js vjs-default-skin" width="640" data-setup='{ "autoplay": true, "preload": "auto", "techOrder": ["youtube"], "sources": [{ "type": "video/youtube" }'>
-        </video>
-        <table class="ui celled table selectable" id="questionsTable">
-            <thead>
-                <tr>
-                    <th>Time</th>
-                    <th>Question</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+    <h1 style="margin-left:5px" id="desc"></h1>
+    <div class="row" > 
+        
+        <div class="element1 col-md-5" style="margin-left:5px"> 
+            <video id="videoPlayer" controls class="video-js vjs-default-skin" width="640" data-setup='{ "autoplay": true, "preload": "auto", "techOrder": ["youtube"], "sources": [{ "type": "video/youtube" }'>
+            </video>
+        </div>
+        <div class="element2 col-md-1"> 
+        </div>
+        <div class="element3 col-md-5"> 
+            <table class="ui celled table selectable" style="width: 100%" id="questionsTable">
+                <thead>
+                    <tr>
+                        <th style="width: 25%">Time</th>
+                        <th style="width: 75%">Question</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="element4 col-md-1"> 
+        </div>
     </div>
-    <h3>Control Video</h3>
-    <button class="ui button" id="buttonVideoPause">PAUSE Video</button>
+    <h3 style="margin-left:5px">Control Video</h3>
+    <button class="ui button" style="margin-left:5px" id="buttonVideoPause">PAUSE Video</button>
     <div class="ui input focus">
         <input type="text" id="resumetime">
     </div>
     <button class="ui button" id="buttonVideoResume">RESUME Video</button>
+    <h3>Add a new Question</h3>
+    <div class="ui input">
+        <input type="text" placeholder="Time" id="newTime">
+    </div>
+    <div class="ui input">
+        <input type="text" placeholder="Question" id="newQuestion">
+    </div>
+    <button class="ui button" id="buttonAddQuestion">Add new Question</button>
 </body>
 
 </html>

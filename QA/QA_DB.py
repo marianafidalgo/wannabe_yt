@@ -60,7 +60,7 @@ def getQuestion(id):
      return v
 
 def getQuestionDICT(id):
-    return getUser(id).to_dictionary()
+    return getQuestion(id).to_dictionary()
 
 def newQuestion(time, question):
     uid = QA(time = time, question = question)
@@ -72,8 +72,6 @@ def newQuestion(time, question):
         return v
     except:
         return None
-
-
 
 if __name__ == "__main__":
     pass

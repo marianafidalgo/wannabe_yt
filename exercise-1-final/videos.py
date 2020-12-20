@@ -30,7 +30,7 @@ def createNewVideo():
     sleep(0.1)
     j = request.get_json()
     print (type(j))
-    if(getUser(j["url"]) is None):
+    if(getVideo(j["url"]) is None):
         ret = False
         try:
             print(j["description"])
@@ -45,6 +45,22 @@ def createNewVideo():
     else:
         print("Video already exists")
     #if there is an erro return ERROR 409
+
+@app.route("/API/videos/", methods=['POST'])
+def sendQA():
+    j = request.get_json()
+    print (type(j))
+    ret = False
+    try:
+        print(j["description"])
+        ret = newVideo(j["description"], j["url"])
+    except:
+        abort(400)
+        #the arguments were incorrect
+    if ret:
+        return {"id": ret}
+    else:
+        abort(409)
 
 
 @app.route("/API/videos/<int:id>/views", methods=['PUT', 'PATCH'])
