@@ -47,7 +47,7 @@ def home_page():
     # return render_template("appPage.html", loggedIn = fenix_blueprint.session.authorized)
     if fenix_blueprint.session.authorized == False:
         #if not logged in browser is redirected to login page (in this case FENIX handled the login)
-        return render_template("appPage.html", loggedIn = fenix_blueprint.session.authorized)
+        return redirect(url_for('fenix-example.login'))
     else:
         #if the user is authenticated then a request to FENIX is made
         resp = fenix_blueprint.session.get("/api/fenix/v1/person/")
@@ -68,16 +68,19 @@ def home_page():
             except:
                 abort(400)
         #send to proxy!!!
-        return redirect(url_for('user', id =data['username'], name=data['name']))
+        #return redirect(url_for('user', id =data['username'], name=data['name']))
+        url = "http://127.0.0.1:4000/logged_In/"+ data['username']+'/'+data['name']
+        print(url)
+        return redirect(url)
 
 
 @app.route('/user/<id>/<name>',methods=['GET','POST'])
 def user(id, name):
     paras = json.dumps({"id":id,"name":name})
-    response = requests.post('http://127.0.0.1:7000/user_proxy',data=paras)
+    response = requests.post('http://127.0.0.1:4000/user_proxy',data=paras)
     print(response.status_code)
     if(response.status_code == 200 ):
-        return redirect('http://127.0.0.1:7000/u_VQA')
+        return redirect('http://127.0.0.1:4000/u_VQA')
     else:
         return "Error"
 
@@ -92,7 +95,7 @@ def logout():
     res = str(session.items())
     print(res)
     # when the browser is redirected to home page it is not logged in anymore
-    return redirect(url_for("home_page"))
+    return redirect("http://127.0.0.1:4000/")
 
 
 @app.route('/private')

@@ -48,25 +48,25 @@
 
   </head>
 <body>
-<title>{% block title %}{% endblock %} - Flask</title>
+<title>Login Page </title>
 
 {% if loggedIn %}
 username - {{ username }} {{name}}
-<!-- <br>
-<a href="{{ url_for("private_page") }}"> Private part of the site (needs auth)</a>
-<br> -->
-<button id="button" onclick="window.location='{{ url_for("logout") }}'" >
+
+<button id="button" onclick="window.location='{{ url_for('logout') }}'" >
   Logout
 </button>
-<!-- <a href="{{ url_for("logout") }}"> Logout</a> -->
+
 
 {% else %}
 
 <div class="bg">
-  <!-- <a href="{{ url_for("fenix-example.login") }}">Login with OAuth Exampleeeee</a> -->
-  <button id="button" onclick="window.location='{{ url_for("fenix-example.login") }}'" >
+
+  <button id="button" onclick="window.location='{{ url_for('login') }}'" >
     Login
   </button>
+
+
 </div>
 
 {% endif %}

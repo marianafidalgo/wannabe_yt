@@ -2,6 +2,7 @@
 from flask import Flask, abort, request,  redirect, url_for
 from Video_DB import *
 from time import sleep
+from flask import render_template
 app = Flask(__name__)
 
 
@@ -73,7 +74,7 @@ def newView(id):
 
 @app.route("/")
 def index():
-    return app.send_static_file('videoListing.html')
+    return render_template('videoListing.html')
 
 if __name__ == "__main__":
    app.run(host='127.0.0.1', port=8000, debug=True)
