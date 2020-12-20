@@ -10,7 +10,7 @@ from os import path
 
 
 #SQL access layer initialization
-DATABASE_FILE = "users.sqlite"
+DATABASE_FILE = "qa.sqlite"
 db_exists = False
 if path.exists(DATABASE_FILE):
     db_exists = True
@@ -21,17 +21,16 @@ engine = create_engine('sqlite:///%s'%(DATABASE_FILE), echo=False) #echo = True 
 Base = declarative_base()
 
 #Declaration of data
-class Users(Base):
-    __tablename__ = 'Users'
+class QA(Base):
+    __tablename__ = 'QA'
     id = Column(Integer, primary_key=True)
-    number = Column(String)
-    name = Column(String)
-    role = Column(String)
+    time = Column(String)
+    question = Column(String)
     def __repr__(self):
-        return "<User (id=%d, number=%s, name=%s, role=%s>" % (
-                                self.id, self.number, self.name, self.role)
+        return "<QA (id=%d, time=%s, question=%s>" % (
+                                self.id, self.time, self.question)
     def to_dictionary(self):
-        return {"user_id": self.id, "number": self.number, "name": self.name, "role": self.role}
+        return {"QA_id": self.id, "time": self.time, "question": self.question}
 
 
 Base.metadata.create_all(engine) #Create tables for the data models
@@ -41,8 +40,8 @@ session = scoped_session(Session)
 #session = Session()
 
 
-def listUsers():
-    return session.query(Users).all()
+def listQA():
+    return session.query(QA).all()
     session.close()
 
 # def listVideosDICT():
@@ -55,16 +54,16 @@ def listUsers():
 #         ret_list.append(vd)
 #     return ret_list
 
-def getUser(number):
-     v =  session.query(Users).filter(Users.number==number).scalar()
+def getQuestion(id):
+     v =  session.query(QA).filter(QA.id==id).scalar()
      session.close()
      return v
 
-def getUserDICT(id):
+def getQuestionDICT(id):
     return getUser(id).to_dictionary()
 
-def newUser(number, name, role):
-    uid = Users(number = number, name = name, role = role)
+def newQuestion(time, question):
+    uid = QA(time = time, question = question)
     try:
         session.add(uid)
         session.commit()

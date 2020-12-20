@@ -13,7 +13,8 @@
     <link href="https://vjs.zencdn.net/7.8.4/video-js.css" rel="stylesheet" />
     <script src="http://vjs.zencdn.net/7.8.4/video.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/2.6.1/Youtube.min.js"></script>
-
+    
+  
     <script>
         id = decodeURIComponent(window.location.search);
         id = id.substring(1);
@@ -48,6 +49,7 @@
                 success: function(data) {
                     console.log(data)
                     url = data["url"]
+                    $("#desc").html("Playing: " + data["description"]);
                     console.log(url)
                         //TODO 8 - update the player with the url retrieved
                     vPlayer.src({
@@ -68,6 +70,23 @@
                 }
             });
 
+            function updateVideostable() {
+                $.ajax({
+                    url: '/API/videos/',
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        console.log(data);
+                        $('#questionsTable > tbody:last-child').empty()
+                        data["videos"].forEach(v => {
+                            console.log(v["video_id"] + " " + v["description"])
+                            $('#videosTable > tbody:last-child').
+                            append('<tr> <td>' + v["video_id"] + '</td><td>' + v["description"] + '</td><td id="nviews' + v["video_id"] + '">xxx</td></tr>');
+                        });
+                    }
+                });
+            }
+
             // TODO 11 - update the table
 
         });
@@ -76,20 +95,27 @@
 </head>
 
 <body>
-
-    <video id="videoPlayer" controls class="video-js vjs-default-skin" width="640" data-setup='{ "autoplay": true, "preload": "auto", "techOrder": ["youtube"], "sources": [{ "type": "video/youtube" }'>
-    </video>
+    <h1 id="desc"></h1>
+    <div class="display:inline-block">
+        <video id="videoPlayer" controls class="video-js vjs-default-skin" width="640" data-setup='{ "autoplay": true, "preload": "auto", "techOrder": ["youtube"], "sources": [{ "type": "video/youtube" }'>
+        </video>
+        <table class="ui celled table selectable" id="questionsTable">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>Question</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
     <h3>Control Video</h3>
-    <button class="ui button" id="buttonVideoPause">
-     PAUSE Video
-    </button>
+    <button class="ui button" id="buttonVideoPause">PAUSE Video</button>
     <div class="ui input focus">
         <input type="text" id="resumetime">
     </div>
-    <button class="ui button" id="buttonVideoResume">
-      RESUME Video
-    </button>
-
+    <button class="ui button" id="buttonVideoResume">RESUME Video</button>
 </body>
 
 </html>
