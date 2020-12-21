@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from flask import Flask, abort, request,  redirect, url_for
-from Video_DB import *
+from QA_DB import *
 from time import sleep
 app = Flask(__name__)
 
@@ -11,10 +11,15 @@ def logout():
     return redirect('http://127.0.0.1:7000/logout')
 
 
-@app.route("/API/videos/", methods=['GET'])
+@app.route("/QA", methods=['GET'])
 def returnsQAJSON():
+    print(listQADICT())
     return {"QA": listQADICT()}
 
+@app.route("/Answers", methods=['GET'])
+def returnsAJSON():
+    print(listAnswersDICT())
+    return {"Answers": listAnswersDICT()}
 
 @app.route("/API/videos/<int:id>/")
 def returnSingleQJSON(id):
@@ -25,7 +30,7 @@ def returnSingleQJSON(id):
         abort(404)
 
 
-@app.route("/API/QA/", methods=['POST'])
+@app.route("/QA", methods=['POST'])
 def createQuestion():
     sleep(0.1)
     j = request.get_json()
@@ -34,7 +39,27 @@ def createQuestion():
     ret = False
     try:
         print(j["question"])
-        ret = newVideo(j["time"], j["question"])
+        ret = newQuestion(j["time"], j["question"])
+    except:
+        abort(400)
+        #the arguments were incorrect
+    if ret:
+        return {"id": ret}
+    else:
+        abort(409)
+    # else:
+    #     print("Video already exists")
+    #if there is an error return ERROR 409
+
+@app.route("/Answers", methods=['POST'])
+def createAnswers():
+    sleep(0.1)
+    j = request.get_json()
+    print (type(j))
+    #if(getQuestion(j["url"]) is None):
+    ret = False
+    try:
+        ret = newAnswer(j["user"], j["name"], j["answer"], j["question"])
     except:
         abort(400)
         #the arguments were incorrect

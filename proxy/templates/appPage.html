@@ -1,74 +1,73 @@
 <!doctype html>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
-<link rel="stylesheet" type="text/css"  href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.css">
-<script  src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.js">  </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-xmlrpc/0.4.3/jquery.xmlrpc.js"> </script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.css">
+<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-xmlrpc/0.4.3/jquery.xmlrpc.js">
+</script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 <link href="https://vjs.zencdn.net/7.8.4/video-js.css" rel="stylesheet" />
 <script src="http://vjs.zencdn.net/7.8.4/video.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/2.6.1/Youtube.min.js"></script>
+
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-  body, html {
-    height: 100%;
-    margin: 0;
-  }
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+        }
+        
+        .bg {
+            /* The image used */
+            background-image: url('https://i.ytimg.com/vi/1waNpmtYSIM/maxresdefault.jpg');
+            /* Full height */
+            height: 100%;
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        #button {
+            display: inline-block;
+            background-color: rgb(150, 52, 48);
+            width: 10vw;
+            height: 10vh;
+            text-align: center;
+            border-radius: 4px;
+            margin: 30px;
+            position: fixed;
+            bottom: 80%;
+            right: 0%;
+            transition: background-color .3s;
+            z-index: 1000;
+            font-size: 40px;
+        }
+    </style>
 
-  .bg {
-    /* The image used */
-    background-image: url('https://i.ytimg.com/vi/1waNpmtYSIM/maxresdefault.jpg');
+</head>
 
-    /* Full height */
-    height: 100%;
-
-    /* Center and scale the image nicely */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  #button {
-  display: inline-block;
-  background-color: rgb(150, 52, 48);
-  width: 10vw;
-  height: 10vh;
-  text-align: center;
-  border-radius: 4px;
-  margin: 30px;
-  position: fixed;
-  bottom: 80%;
-  right: 0%;
-  transition: background-color .3s;
-  z-index: 1000;
-  font-size: 40px;
-}
-  </style>
-
-  </head>
 <body>
-<title>Login Page </title>
+    <title>Login Page </title>
 
-{% if loggedIn %}
-username - {{ username }} {{name}}
+    {% if loggedIn %} username - {{ username }} {{name}}
 
-<button id="button" onclick="window.location='{{ url_for('logout') }}'" >
+    <button id="button" onclick="window.location='{{ url_for('logout') }}'">
   Logout
-</button>
+</button> {% else %}
 
+    <div class="bg">
 
-{% else %}
-
-<div class="bg">
-
-  <button id="button" onclick="window.location='{{ url_for('login') }}'" >
+        <button id="button" onclick="window.location='{{ url_for('login') }}'">
     Login
   </button>
 
 
-</div>
+    </div>
 
-{% endif %}
+    {% endif %}
 
-  </body>
+</body>

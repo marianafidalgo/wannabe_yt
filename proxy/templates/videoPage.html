@@ -17,8 +17,20 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
+    <style>
+        table td .radio {
+            border: 1px solid red;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+
     <script>
-        var id = {{ id }}
+        var id = {
+            {
+                id
+            }
+        }
 
         function addNewQuestion(time, question) {
             // TODO 4 - create an object (requestData) that contains the url and descrition
@@ -28,28 +40,87 @@
                 'question': question
             }
             $.ajax({
-                url: '/API/videos/QA',
+                url: '/QA',
                 type: "POST",
                 dataType: "json",
                 contentType: 'application/json',
                 data: JSON.stringify(requestData),
                 success: function(data) {
                     //TODO 5 after creating the video update the table
-                    console.log("resppnse for video creation" + data)
+                    console.log("response for question creation" + data)
                     console.log(data)
                     updateQuestiontable()
                 }
             });
         }
 
+        function addNewAnswer(user, name, answer, question) {
+            // TODO 4 - create an object (requestData) that contains the url and descrition
+            // look at the server to understand what data should be sent.
+            let requestData = {
+                "user": user,
+                "name": name,
+                'answer': answer,
+                "question": question,
+            }
+            $.ajax({
+                url: '/Answers',
+                type: "POST",
+                dataType: "json",
+                contentType: 'application/json',
+                data: JSON.stringify(requestData),
+                success: function(data) {
+                    //TODO 5 after creating the video update the table
+                    console.log("response for answer creation" + data)
+                    console.log(data)
+                    updateAnswerstable()
+                }
+            });
+        }
+
+        function updateQuestiontable() {
+            $.ajax({
+                url: '/QA',
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    console.log(data);
+                    $('#questionsTable > tbody:last-child').empty()
+                    data["QA"].forEach(q => {
+                        console.log(q["time"] + " " + q["question"])
+                        $('#questionsTable > tbody:last-child').
+                        append('<tr> <td>' + q["time"] + '</td><td>' + q["question"] + '</td><td style="text-align:center"> <input type="radio" id=\'regular\' name="optradio"> </td></tr>');
+                    });
+                }
+            });
+        }
+
+        function updateAnswerstable() {
+            $.ajax({
+                url: '/Answers',
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    console.log(data);
+                    $('#ansTable > tbody:last-child').empty()
+                    data["answers"].forEach(a => {
+                        console.log(a["user"] + " " + a["name"] + " " + a["answer"] + " " + a["q"])
+                        $('#questionsTable > tbody:last-child').
+                        append('<tr> <td>' + a["user"] + '</td><td>' + a["name"] + '</td><td>' + a["answer"] + '</td></tr>');
+                    });
+                }
+            });
+        }
+
         $(document).ready(function() {
             var vPlayer = videojs('videoPlayer');
-
+            updateQuestiontable()
             $("#buttonVideoPause").click(function() {
                 vPlayer.pause()
                 var pauseTime = vPlayer.currentTime()
                 console.log(pauseTime)
                 $("#resumetime").val(pauseTime)
+                document.getElementById("newTime").value = pauseTime;
 
             })
             $("#buttonVideoResume").click(function() {
@@ -87,30 +158,25 @@
                 }
             });
 
-            function updateQuestiontable() {
-                $.ajax({
-                    url: '/API/videos/',
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        console.log(data);
-                        $('#questionsTable > tbody:last-child').empty()
-                        data["videos"].forEach(v => {
-                            console.log(v["video_id"] + " " + v["description"])
-                            $('#videosTable > tbody:last-child').
-                            append('<tr> <td>' + v["video_id"] + '</td><td>' + v["description"] + '</td><td id="nviews' + v["video_id"] + '">xxx</td></tr>');
-                        });
-                    }
-                });
-            }
+
 
             // TODO 11 - update the table
             $("#buttonAddQuestion").click(function() {
-                newTime = $("#newTime").val()
-                newQuestion = $("#newQuestion").val()
-                addNewQuestion(newTime, newQuestion)
+                    newTime = $("#newTime").val()
+                    newQuestion = $("#newQuestion").val()
+                    addNewQuestion(newTime, newQuestion)
+                        //TODO 3 - get the values of #newVideoURL and newVideoDescription
+                        // and pass those values to the addNewVideo function
+                    vPlayer.currentTime(parseFloat($("#resumetime").val()))
+                    vPlayer.play()
+                })
+                // TODO 11 - update the table
+            $("#buttonAddAnswer").click(function() {
+                newAnswer = $("#newAnswer").val()
+                addNewAnswer(user, name, newAnswer, question)
                     //TODO 3 - get the values of #newVideoURL and newVideoDescription
                     // and pass those values to the addNewVideo function
+
             })
 
         });
@@ -120,27 +186,28 @@
 
 <body>
     <h1 style="margin-left:5px" id="desc"></h1>
-    <div class="row" > 
-        
-        <div class="element1 col-md-5" style="margin-left:5px"> 
+    <div class="row">
+
+        <div class="element1 col-md-5" style="margin-left:5px">
             <video id="videoPlayer" controls class="video-js vjs-default-skin" width="640" data-setup='{ "autoplay": true, "preload": "auto", "techOrder": ["youtube"], "sources": [{ "type": "video/youtube" }'>
             </video>
         </div>
-        <div class="element2 col-md-1"> 
+        <div class="element2 col-md-1">
         </div>
-        <div class="element3 col-md-5"> 
+        <div class="element3 col-md-5" style="height:20vw;overflow:auto;">
             <table class="ui celled table selectable" style="width: 100%" id="questionsTable">
                 <thead>
                     <tr>
-                        <th style="width: 25%">Time</th>
-                        <th style="width: 75%">Question</th>
+                        <th style="width: 25%">Time [s]</th>
+                        <th style="width: 65%">Question</th>
+                        <th style="width: 10%">Answers</th>
                     </tr>
                 </thead>
                 <tbody>
                 </tbody>
             </table>
         </div>
-        <div class="element4 col-md-1"> 
+        <div class="element4 col-md-1">
         </div>
     </div>
     <h3 style="margin-left:5px">Control Video</h3>
@@ -157,6 +224,25 @@
         <input type="text" placeholder="Question" id="newQuestion">
     </div>
     <button class="ui button" id="buttonAddQuestion">Add new Question</button>
+
+    <h3>List of Answers</h3>
+    <table class="ui celled table selectable" id="ansTable">
+        <thead>
+            <tr>
+                <th style="width: 25%">User</th>
+                <th style="width: 25%">Name</th>
+                <th style="width: 50%">Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <h3>Add a new Answer</h3>
+    <div class="ui input">
+        <input type="text" placeholder="Answer" id="newAnswer">
+    </div>
+    <button class="ui button" id="buttonAddAnswer">Add new Answer</button>
+
 </body>
 
 </html>

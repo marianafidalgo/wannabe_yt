@@ -26,10 +26,10 @@ def returnSingleVideoJSON(id):
         abort(404)
 
 
-@app.route("/API/videos/", methods=['POST'])
-def createNewVideo():
+@app.route("/API/videos/<json>", methods=['POST'])
+def createNewVideo(json):
     sleep(0.1)
-    j = request.get_json()
+    j = json
     print (type(j))
     if(getVideo(j["url"]) is None):
         ret = False

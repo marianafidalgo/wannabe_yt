@@ -56,7 +56,7 @@
                 'url': url
             }
             $.ajax({
-                url: '/API/videos/',
+                url: '/videos',
                 type: "POST",
                 dataType: "json",
                 contentType: 'application/json',
@@ -86,11 +86,12 @@
                 addNewVideo(newVideoURl, newVideoDESC)
                     //TODO 3 - get the values of #newVideoURL and newVideoDescription
                     // and pass those values to the addNewVideo function
+                updateVideostable()
             })
 
             $("#buttonPlayVideo").click(function() {
                 videoID = $("#playVideoID").val()
-                window.location.href = "videoPage.html/" + videoID;
+                window.location.href = "videoPage.html/" + videoID
             })
         });
     </script>
@@ -98,7 +99,7 @@
 
 <body>
     </br>
-    <h2 >Welcome {{name}}</h2>
+    <h2>Welcome {{name}}</h2>
     </br>
     <h3>List of videos</h3>
     <table class="ui celled table selectable" id="videosTable">
@@ -130,7 +131,7 @@
     <button class="ui button" id="buttonPlayVideo">Play</button>
 
     <br>
-    <button class="ui button" onclick="window.location='{{ url_for("logout") }}'">Logout</button>
+    <button class="ui button" onclick="window.location='{{ url_for('logout') }}'">Logout</button>
 </body>
 
 </html>

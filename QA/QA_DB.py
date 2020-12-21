@@ -32,6 +32,20 @@ class QA(Base):
     def to_dictionary(self):
         return {"QA_id": self.id, "time": self.time, "question": self.question}
 
+class Answer(Base):
+    __tablename__ = 'answers'
+    id = Column(Integer, primary_key=True)
+    question_id = Column(Integer, ForeignKey('QA.id'))
+    user = Column(String)
+    name = Column(String)
+    answer = Column(String)
+    question = relationship("QA", backref="answers")
+    def __repr__(self):
+        return "<answers (id=%d, user=%s, name=%s, answer=%s, question=%s>" % (
+                                self.id, self.user, self.name, self.question)
+    def to_dictionary(self):
+        return {"answers_id": self.id, "user": self.user, "name": self.name, "answer": self.answer, "question": self.question}
+
 
 Base.metadata.create_all(engine) #Create tables for the data models
 
@@ -44,22 +58,22 @@ def listQA():
     return session.query(QA).all()
     session.close()
 
-# def listVideosDICT():
-#     ret_list = []
-#     lv = listVideos()
-#     for v in lv:
-#         vd = v.to_dictionary()
-#         del(vd["url"])
-#         del(vd["views"])
-#         ret_list.append(vd)
-#     return ret_list
+def listQADICT():
+    ret_list = []
+    lv = listQA()
+    for v in lv:
+        vd = v.to_dictionary()
+        # del(vd["url"])
+        # del(vd["views"])
+        ret_list.append(vd)
+    return ret_list
 
 def getQuestion(id):
      v =  session.query(QA).filter(QA.id==id).scalar()
      session.close()
      return v
 
-def getQuestionDICT(id):
+def getQDICT(id):
     return getQuestion(id).to_dictionary()
 
 def newQuestion(time, question):
@@ -72,6 +86,32 @@ def newQuestion(time, question):
         return v
     except:
         return None
+
+def newAnswer(user, name, answer, question_id,):
+    uid = answers(user = user, name = name, answer = answer, question = question_id)
+    try:
+        session.add(uid)
+        session.commit()
+        v = uid.id
+        session.close()
+        return v
+    except:
+        return None
+
+def listAnswers(question_id):
+    return session.query(answers).filter(answers.question == question_id).all()
+    session.close()
+
+def listAnswersDICT():
+    ret_list = []
+    lv = listAnswers()
+    for v in lv:
+        vd = v.to_dictionary()
+        del(vd["question"])
+        # del(vd["views"])
+        ret_list.append(vd)
+    return ret_list
+
 
 if __name__ == "__main__":
     pass
