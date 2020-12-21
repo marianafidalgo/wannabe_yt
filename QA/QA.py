@@ -16,10 +16,10 @@ def returnsQAJSON():
     print(listQADICT())
     return {"QA": listQADICT()}
 
-@app.route("/Answers", methods=['GET'])
-def returnsAJSON():
-    print(listAnswersDICT())
-    return {"Answers": listAnswersDICT()}
+@app.route("/Answers/<id>", methods=['GET'])
+def returnsAJSON(id):
+    print(listAnswersDICT(id))
+    return {"Answers": listAnswersDICT(id)}
 
 @app.route("/API/videos/<int:id>/")
 def returnSingleQJSON(id):
@@ -38,7 +38,6 @@ def createQuestion():
     #if(getQuestion(j["url"]) is None):
     ret = False
     try:
-        print("laaaaaaaaaaa")
         print(j["question"])
         ret = newQuestion(j["time"], j["question"])
     except:
@@ -56,7 +55,7 @@ def createQuestion():
 def createAnswers():
     sleep(0.1)
     j = request.get_json()
-    print (type(j))
+    print (j)
     #if(getQuestion(j["url"]) is None):
     ret = False
     try:

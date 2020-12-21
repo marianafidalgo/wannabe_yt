@@ -25,9 +25,9 @@ def logout():
 def logged_In(id, name):
     return render_template("videoListing.html", id = id, name = name)
 
-@app.route("/logged_In/<user>/videoPage.html/<id>", methods = ["GET"])
-def logged_In_vid(user, id):
-    return render_template("videoPage.html", user = user, id = id)
+@app.route("/logged_In/<user>/videoPage.html/<id>/<name>", methods = ["GET"])
+def logged_In_vid(user, id, name):
+    return render_template("videoPage.html", user = user, name = name, id = id)
 
 @app.route("/videos", methods = ["GET"])
 def videos():
@@ -65,7 +65,7 @@ def video_views(id):
 def new_question():
     j = request.get_json()
     #print(j)
-    resp = requests.post("http://127.0.0.1:7000/QA/", json = j)
+    resp = requests.post("http://127.0.0.1:7000/QA", json = j)
     if(resp.status_code == 200):
         print(j)
     return j
@@ -83,14 +83,14 @@ def questions():
 def new_answer():
     j = request.get_json()
     print(j)
-    resp = requests.post("http://127.0.0.1:7000/QA/", json = j)
+    resp = requests.post("http://127.0.0.1:7000/Answers", json = j)
     if(resp.status_code == 200):
         print(j)
     return j
 
-@app.route("/Answers", methods = ["GET"])
-def answers():
-    resp = requests.get("http://127.0.0.1:7000/Answers")
+@app.route("/Answers/<id>", methods = ["GET"])
+def answers_qid(id):
+    resp = requests.get("http://127.0.0.1:7000/Answers/" + id)
     answers = {}
     if(resp.status_code == 200):
         answers = resp.json()

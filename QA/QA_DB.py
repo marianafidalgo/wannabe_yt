@@ -33,18 +33,19 @@ class QA(Base):
         return {"QA_id": self.id, "time": self.time, "question": self.question}
 
 class Answer(Base):
-    __tablename__ = 'answers'
+    __tablename__ = 'Answer'
     id = Column(Integer, primary_key=True)
-    question_id = Column(Integer, ForeignKey('QA.id'))
+    #question_id = Column(Integer, ForeignKey('QA.id'))
     user = Column(String)
     name = Column(String)
     answer = Column(String)
-    question = relationship("QA", backref="answers")
+    question = Column(String)
+    #question = relationship("QA", backref="Answer")
     def __repr__(self):
-        return "<answers (id=%d, user=%s, name=%s, answer=%s, question=%s>" % (
-                                self.id, self.user, self.name, self.question)
+        return "<Answer ( id=%d, user=%s, name=%s, answer=%s, question=%s>" % (
+                            self.id, self.user, self.name, self.answer, self.question)
     def to_dictionary(self):
-        return {"answers_id": self.id, "user": self.user, "name": self.name, "answer": self.answer, "question": self.question}
+        return {"Answer": self.id, "user": self.user, "name": self.name, "answer": self.answer, "question": self.question}
 
 
 Base.metadata.create_all(engine) #Create tables for the data models
@@ -87,8 +88,8 @@ def newQuestion(time, question):
     except:
         return None
 
-def newAnswer(user, name, answer, question_id,):
-    uid = answers(user = user, name = name, answer = answer, question = question_id)
+def newAnswer(user, name, answer, question):
+    uid = Answer(user = user, name = name, answer = answer, question = question)
     try:
         session.add(uid)
         session.commit()
@@ -99,15 +100,17 @@ def newAnswer(user, name, answer, question_id,):
         return None
 
 def listAnswers(question_id):
-    return session.query(answers).filter(answers.question == question_id).all()
+    v =  session.query(Answer).filter(Answer.question==question_id).all()
     session.close()
+    return v
 
-def listAnswersDICT():
+
+def listAnswersDICT(question_id):
     ret_list = []
-    lv = listAnswers()
+    lv = listAnswers(question_id)
     for v in lv:
         vd = v.to_dictionary()
-        del(vd["question"])
+        #del(vd["question"])
         # del(vd["views"])
         ret_list.append(vd)
     return ret_list

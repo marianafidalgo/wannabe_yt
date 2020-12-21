@@ -26,7 +26,9 @@
     </style>
 
     <script>
-        var id = 13
+        var id = '{{id}}'
+        var user = '{{user}}'
+        var name = '{{name}}'
 
         function addNewQuestion(time, question) {
             // TODO 4 - create an object (requestData) that contains the url and descrition
@@ -68,8 +70,8 @@
                 success: function(data) {
                     //TODO 5 after creating the video update the table
                     console.log("response for answer creation" + data)
-                    console.log(data)
-                    updateAnswerstable()
+                    console.log(data.question)
+                    updateAnswerstable(data.question)
                 }
             });
         }
@@ -85,23 +87,24 @@
                     data["QA"].forEach(q => {
                         console.log(q["time"] + " " + q["question"])
                         $('#questionsTable > tbody:last-child').
-                        append('<tr> <td>' + q["time"] + '</td><td>' + q["question"] + '</td><td style="text-align:center"> <input type="radio" id=\'regular\' name="optradio"> </td></tr>');
+                        append('<tr> <td>' + q["time"] + '</td><td>' + q["question"] + '</td><td style="text-align:center"> <input type="radio" name="radioQ" value=' + q["QA_id"] + '> </td></tr>');
                     });
                 }
             });
         }
 
-        function updateAnswerstable() {
+        function updateAnswerstable(question_id) {
             $.ajax({
-                url: '/Answers',
+                url: '/Answers/' + question_id,
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
+                    console.log("ola");
                     console.log(data);
                     $('#ansTable > tbody:last-child').empty()
-                    data["answers"].forEach(a => {
-                        console.log(a["user"] + " " + a["name"] + " " + a["answer"] + " " + a["q"])
-                        $('#questionsTable > tbody:last-child').
+                    data["Answers"].forEach(a => {
+                        console.log(a["user"] + " " + a["name"] + " " + a["answer"] + " " + a["question"])
+                        $('#ansTable > tbody:last-child').
                         append('<tr> <td>' + a["user"] + '</td><td>' + a["name"] + '</td><td>' + a["answer"] + '</td></tr>');
                     });
                 }
@@ -167,9 +170,22 @@
                 // TODO 11 - update the table
             $("#buttonAddAnswer").click(function() {
                 newAnswer = $("#newAnswer").val()
-                addNewAnswer(user, name, newAnswer, question)
+                question = $('input[name=radioQ]:checked').val()
+                console.log(user)
+                console.log(name)
+                console.log(newAnswer)
+                console.log(question)
+                if (question > 0)
+                    addNewAnswer(user, name, newAnswer, question)
+                else
+                    alert("Please choose answer")
                     //TODO 3 - get the values of #newVideoURL and newVideoDescription
                     // and pass those values to the addNewVideo function
+            })
+            $("#buttonSeeAnswers").click(function() {
+                question_id = $('input[name=radioQ]:checked').val()
+                console.log(question_id)
+                updateAnswerstable(question_id)
             })
         });
     </script>
@@ -201,7 +217,9 @@
         </div>
         <div class="element4 col-md-1">
         </div>
+
     </div>
+    <button style="margin-left:51vw; margin-top:5px;" class="ui button" id="buttonSeeAnswers">See Answers</button>
     <h3 style="margin-left:5px">Control Video</h3>
     <button class="ui button" style="margin-left:5px" id="buttonVideoPause">PAUSE Video</button>
     <div class="ui input focus">

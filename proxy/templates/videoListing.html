@@ -15,7 +15,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/2.6.1/Youtube.min.js"></script>
 
     <script>
-        
+        var n = '{{name}}'
         function getVideoViews(videoID) {
             $.ajax({
                 url: '/videos/' + videoID + '/',
@@ -91,7 +91,7 @@
 
             $("#buttonPlayVideo").click(function() {
                 videoID = $("#playVideoID").val()
-                window.location.href = "videoPage.html/" + videoID
+                window.location.href = "videoPage.html/" + videoID + "/" + n
             })
         });
     </script>
