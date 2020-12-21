@@ -16,6 +16,7 @@
 
     <script>
         var n = '{{name}}'
+
         function getVideoViews(videoID) {
             $.ajax({
                 url: '/videos/' + videoID + '/',
@@ -25,6 +26,19 @@
                     console.log(data)
                     $("#nviews" + videoID).html(data["views"])
                     console.log("update the number of views on the table for" + videoID)
+                },
+            })
+        }
+
+        function getNumQuestions(videoID) {
+            $.ajax({
+                url: '/QA/' + videoID + '/',
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    console.log(data)
+                    $("#nquestions" + videoID).html(data["num_questions"])
+                    console.log("update the number of questions on the table for" + videoID)
                 },
             })
         }
@@ -40,8 +54,9 @@
                     data["videos"].forEach(v => {
                         console.log(v["video_id"] + " " + v["description"])
                         $('#videosTable > tbody:last-child').
-                        append('<tr> <td>' + v["video_id"] + '</td><td>' + v["description"] + '</td><td id="nviews' + v["video_id"] + '">xxx</td></tr>');
+                        append('<tr> <td>' + v["video_id"] + '</td><td>' + v["description"] + '</td><td id="nviews' + v["video_id"] + '">xxx</td><td id="nquestions' + v["video_id"] + '">xxx</td></tr>');
                         getVideoViews(v["video_id"])
+                        getNumQuestions(v["video_id"])
                             // TODO  10 - Fill the column with the number of views of each video
                     });
                 }
@@ -108,6 +123,7 @@
                 <th>ID</th>
                 <th>Description</th>
                 <th>Views</th>
+                <th>Questions</th>
             </tr>
         </thead>
         <tbody>

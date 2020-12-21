@@ -71,6 +71,13 @@ def createAnswers():
     #     print("Video already exists")
     #if there is an error return ERROR 409
 
+@app.route("/QA/<int:id>", methods=['PUT', 'PATCH'])
+def newQSum(id):
+    try:
+        return {"id":id, "num_questions": newQuestionSum(id)}
+    except:
+        abort(404)
+
 # @app.route("/")
 # def index():
 #     return app.send_static_file('videoListing.html')

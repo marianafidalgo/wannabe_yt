@@ -26,11 +26,12 @@ class QA(Base):
     id = Column(Integer, primary_key=True)
     time = Column(String)
     question = Column(String)
+    num_questions = Column(Integer, default = 0)
     def __repr__(self):
-        return "<QA (id=%d, time=%s, question=%s>" % (
-                                self.id, self.time, self.question)
+        return "<QA (id=%d, time=%s, question=%s, num_questions=%s>" % (
+                        self.id, self.time, self.question, self.num_questions)
     def to_dictionary(self):
-        return {"QA_id": self.id, "time": self.time, "question": self.question}
+        return {"QA_id": self.id, "time": self.time, "question": self.question, "num_questions": self.num_questions}
 
 class Answer(Base):
     __tablename__ = 'Answer'
@@ -61,18 +62,17 @@ def listQA():
 
 def listQADICT():
     ret_list = []
-    lv = listQA()
-    for v in lv:
-        vd = v.to_dictionary()
-        # del(vd["url"])
-        # del(vd["views"])
-        ret_list.append(vd)
+    lqa = listQA()
+    for q in lqa:
+        qa = q.to_dictionary()
+        del(qa["num_questions"])
+        ret_list.append(qa)
     return ret_list
 
 def getQuestion(id):
-     v =  session.query(QA).filter(QA.id==id).scalar()
+     q =  session.query(QA).filter(QA.id==id).scalar()
      session.close()
-     return v
+     return q
 
 def getQDICT(id):
     return getQuestion(id).to_dictionary()
@@ -110,11 +110,16 @@ def listAnswersDICT(question_id):
     lv = listAnswers(question_id)
     for v in lv:
         vd = v.to_dictionary()
-        #del(vd["question"])
-        # del(vd["views"])
         ret_list.append(vd)
     return ret_list
 
+def newQuestionSum(id):
+    b = session.query(QA).filter(QA.id==id).first()
+    b.num_questions+=1
+    n = b.num_questions
+    session.commit()
+    session.close()
+    return n
 
 if __name__ == "__main__":
     pass

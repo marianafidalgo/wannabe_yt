@@ -79,6 +79,14 @@ def questions():
     print(questions)
     return questions
 
+@app.route("/QA/<int:id>/", methods = ['PUT', 'PATCH'])
+def num_questions(id):
+    resp = requests.put("http://127.0.0.1:7000/QA/" + id)
+    num_q = {}
+    if(resp.status_code == 200):
+        num_q = resp.json()
+    return num_q
+
 @app.route("/Answers", methods = ["POST"])
 def new_answer():
     j = request.get_json()
