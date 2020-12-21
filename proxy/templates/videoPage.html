@@ -26,11 +26,7 @@
     </style>
 
     <script>
-        var id = {
-            {
-                id
-            }
-        }
+        var id = 13
 
         function addNewQuestion(time, question) {
             // TODO 4 - create an object (requestData) that contains the url and descrition
@@ -158,8 +154,6 @@
                 }
             });
 
-
-
             // TODO 11 - update the table
             $("#buttonAddQuestion").click(function() {
                     newTime = $("#newTime").val()
@@ -176,9 +170,7 @@
                 addNewAnswer(user, name, newAnswer, question)
                     //TODO 3 - get the values of #newVideoURL and newVideoDescription
                     // and pass those values to the addNewVideo function
-
             })
-
         });
     </script>
 

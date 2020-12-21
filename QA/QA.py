@@ -38,6 +38,7 @@ def createQuestion():
     #if(getQuestion(j["url"]) is None):
     ret = False
     try:
+        print("laaaaaaaaaaa")
         print(j["question"])
         ret = newQuestion(j["time"], j["question"])
     except:

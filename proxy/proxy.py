@@ -25,9 +25,9 @@ def logout():
 def logged_In(id, name):
     return render_template("videoListing.html", id = id, name = name)
 
-@app.route("/logged_In/<id_user>/videoPage.html/<name>/<id>", methods = ["GET"])
-def logged_In_vid(id_user, name, id):
-    return render_template("videoPage.html", user = id_user, name = name, id = id)
+@app.route("/logged_In/<user>/videoPage.html/<id>", methods = ["GET"])
+def logged_In_vid(user, id):
+    return render_template("videoPage.html", user = user, id = id)
 
 @app.route("/videos", methods = ["GET"])
 def videos():
@@ -64,7 +64,7 @@ def video_views(id):
 @app.route("/QA", methods = ["POST"])
 def new_question():
     j = request.get_json()
-    print(j)
+    #print(j)
     resp = requests.post("http://127.0.0.1:7000/QA/", json = j)
     if(resp.status_code == 200):
         print(j)
