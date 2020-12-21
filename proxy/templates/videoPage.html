@@ -18,9 +18,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
     <script>
-        id = decodeURIComponent(window.location.search);
-        id = id.substring(1);
-        console.log(id);
+        var id = {{ id }}
 
         function addNewQuestion(time, question) {
             // TODO 4 - create an object (requestData) that contains the url and descrition
@@ -46,11 +44,6 @@
 
         $(document).ready(function() {
             var vPlayer = videojs('videoPlayer');
-            vPlayer.src({
-                "type": "video/youtube",
-                "src": "https://www.youtube.com/watch?v=xjS6SftYQaQ"
-            });
-            vPlayer.play()
 
             $("#buttonVideoPause").click(function() {
                 vPlayer.pause()
@@ -67,7 +60,7 @@
             $.ajax({
                 //TODO 7 - retrieve the corresponding URL by
                 //        calling the /videos/<id>/ REST endpoint)
-                url: '/API/videos/' + id + '/',
+                url: '/videos/' + id + '/',
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -84,7 +77,7 @@
 
                     $.ajax({
                         //TODO 9 - increase the number of views
-                        url: '/API/videos/' + id + '/views',
+                        url: '/videos/' + id + '/views',
                         type: "PUT",
                         dataType: "json",
                         success: function(data) {

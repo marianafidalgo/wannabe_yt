@@ -10,9 +10,7 @@ from flask import session
 
 from user_DB import *
 
-
 import requests
-
 
 #necessary so that our server does not need https
 import os

@@ -18,7 +18,7 @@
 
         function getVideoViews(videoID) {
             $.ajax({
-                url: '/API/videos/' + videoID + '/',
+                url: '/videos/' + videoID + '/',
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -31,7 +31,7 @@
 
         function updateVideostable() {
             $.ajax({
-                url: '/API/videos/',
+                url: '/videos',
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -90,7 +90,7 @@
 
             $("#buttonPlayVideo").click(function() {
                 videoID = $("#playVideoID").val()
-                window.location.href = "static/videoPage.html?" + videoID;
+                window.location.href = "videoPage.html/" + videoID;
             })
         });
     </script>
