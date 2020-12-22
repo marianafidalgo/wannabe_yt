@@ -61,6 +61,15 @@ def video_views(id):
         video = resp.json()
     return video
 
+@app.route("/videos/<id>/questions", methods = ['PUT', 'PATCH'])
+def num_questions(id):
+    resp = requests.put("http://127.0.0.1:8000/API/videos/" + id + "/questions")
+    num_q = {}
+    if(resp.status_code == 200):
+        num_q = resp.json()
+    print(num_q)
+    return num_q
+
 @app.route("/QA", methods = ["POST"])
 def new_question():
     j = request.get_json()
@@ -70,22 +79,14 @@ def new_question():
         print(j)
     return j
 
-@app.route("/QA", methods = ["GET"])
-def questions():
-    resp = requests.get("http://127.0.0.1:7000/QA")
+@app.route("/QA/<v_id>", methods = ["GET"])
+def questions(v_id):
+    resp = requests.get("http://127.0.0.1:7000/QA/"+ v_id)
     questions = {}
     if(resp.status_code == 200):
         questions = resp.json()
     print(questions)
     return questions
-
-@app.route("/QA/<int:id>/", methods = ['PUT', 'PATCH'])
-def num_questions(id):
-    resp = requests.put("http://127.0.0.1:7000/QA/" + id)
-    num_q = {}
-    if(resp.status_code == 200):
-        num_q = resp.json()
-    return num_q
 
 @app.route("/Answers", methods = ["POST"])
 def new_answer():

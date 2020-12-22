@@ -11,10 +11,10 @@ def logout():
     return redirect('http://127.0.0.1:7000/logout')
 
 
-@app.route("/QA", methods=['GET'])
-def returnsQAJSON():
-    print(listQADICT())
-    return {"QA": listQADICT()}
+@app.route("/QA/<id>", methods=['GET'])
+def returnsQAJSON(id):
+    print(listQADICT(id))
+    return {"QA": listQADICT(id)}
 
 @app.route("/Answers/<id>", methods=['GET'])
 def returnsAJSON(id):
@@ -38,8 +38,8 @@ def createQuestion():
     #if(getQuestion(j["url"]) is None):
     ret = False
     try:
-        print(j["question"])
-        ret = newQuestion(j["time"], j["question"])
+        print(j["time"])
+        ret = newQuestion(j["v_id"], j["user"], j["name"], j["time"], j["question"])
     except:
         abort(400)
         #the arguments were incorrect
@@ -70,13 +70,6 @@ def createAnswers():
     # else:
     #     print("Video already exists")
     #if there is an error return ERROR 409
-
-@app.route("/QA/<int:id>", methods=['PUT', 'PATCH'])
-def newQSum(id):
-    try:
-        return {"id":id, "num_questions": newQuestionSum(id)}
-    except:
-        abort(404)
 
 # @app.route("/")
 # def index():

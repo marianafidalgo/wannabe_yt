@@ -24,14 +24,16 @@ Base = declarative_base()
 class QA(Base):
     __tablename__ = 'QA'
     id = Column(Integer, primary_key=True)
+    video_id = Column(String)
+    user = Column(String)
+    name = Column(String)
     time = Column(String)
     question = Column(String)
-    num_questions = Column(Integer, default = 0)
     def __repr__(self):
-        return "<QA (id=%d, time=%s, question=%s, num_questions=%s>" % (
-                        self.id, self.time, self.question, self.num_questions)
+        return "<QA (id=%d, video_id =%s, user =%s, name =%s, time=%s, question=%s>" % (
+                        self.id, self.video_id, self.user, self.name, self.time, self.question)
     def to_dictionary(self):
-        return {"QA_id": self.id, "time": self.time, "question": self.question, "num_questions": self.num_questions}
+        return {"QA_id": self.id, "video_id": self.video_id, "user": self.user,"name": self.name, "time": self.time, "question": self.question}
 
 class Answer(Base):
     __tablename__ = 'Answer'
@@ -56,17 +58,21 @@ session = scoped_session(Session)
 #session = Session()
 
 
-def listQA():
-    return session.query(QA).all()
+def listQA(id):
+    return session.query(QA).filter(QA.video_id==id).all()
     session.close()
 
-def listQADICT():
+def listQADICT(id):
     ret_list = []
-    lqa = listQA()
+    lqa = listQA(id)
     for q in lqa:
         qa = q.to_dictionary()
-        del(qa["num_questions"])
+        # del(qa["video_id"])
+        # del(qa["user"])
+        # del(qa["name"])
+        #del(qa["num_questions"])
         ret_list.append(qa)
+    print(ret_list)
     return ret_list
 
 def getQuestion(id):
@@ -77,8 +83,8 @@ def getQuestion(id):
 def getQDICT(id):
     return getQuestion(id).to_dictionary()
 
-def newQuestion(time, question):
-    uid = QA(time = time, question = question)
+def newQuestion(v_id, user, name, time, question):
+    uid = QA(video_id = v_id, user = user, name = name, time = time, question = question)
     try:
         session.add(uid)
         session.commit()
@@ -100,7 +106,7 @@ def newAnswer(user, name, answer, question):
         return None
 
 def listAnswers(question_id):
-    v =  session.query(Answer).filter(Answer.question==question_id).all()
+    v =  session.query(Answer).filter(Answer.question==question_id ).all()
     session.close()
     return v
 
@@ -113,13 +119,6 @@ def listAnswersDICT(question_id):
         ret_list.append(vd)
     return ret_list
 
-def newQuestionSum(id):
-    b = session.query(QA).filter(QA.id==id).first()
-    b.num_questions+=1
-    n = b.num_questions
-    session.commit()
-    session.close()
-    return n
 
 if __name__ == "__main__":
     pass

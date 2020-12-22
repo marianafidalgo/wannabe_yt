@@ -71,6 +71,12 @@ def newView(id):
     except:
         abort(404)
 
+@app.route("/API/videos/<int:id>/questions", methods=['PUT', 'PATCH'])
+def newQSum(id):
+    try:
+        return {"id":id, "num_questions": newQuestionSum(id)}
+    except:
+        abort(404)
 
 @app.route("/")
 def index():

@@ -34,6 +34,9 @@
             // TODO 4 - create an object (requestData) that contains the url and descrition
             // look at the server to understand what data should be sent.
             let requestData = {
+                "v_id": id,
+                "user": user,
+                "name": name,
                 "time": time,
                 'question': question
             }
@@ -78,17 +81,18 @@
 
         function updateQuestiontable() {
             $.ajax({
-                url: '/QA',
+                url: '/QA/' + id,
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
                     console.log(data);
                     $('#questionsTable > tbody:last-child').empty()
-                    data["QA"].forEach(q => {
+                    for (var i = 0; i < data["QA"].length; i++) {
+                        q = data["QA"][i]
                         console.log(q["time"] + " " + q["question"])
                         $('#questionsTable > tbody:last-child').
-                        append('<tr> <td>' + q["time"] + '</td><td>' + q["question"] + '</td><td style="text-align:center"> <input type="radio" name="radioQ" value=' + q["QA_id"] + '> </td></tr>');
-                    });
+                        append('<tr> <td>' + q["time"] + '</td><td>' + q["question"] + '</td><td style="text-align:center"> <input type="radio" name="radioQ" value=' + i + '> </td></tr>');
+                    }
                 }
             });
         }
@@ -116,7 +120,7 @@
             updateQuestiontable()
             $.ajax({
                 //TODO 9 - increase the number of views
-                url: '/QA/' + id,
+                url: '/videos/' + id + "/views",
                 type: "PUT",
                 dataType: "json",
                 success: function(data) {
@@ -167,10 +171,11 @@
 
                     $.ajax({
                         //TODO 9 - increase the number of views
-                        url: '/QA/' + id,
+                        url: '/videos/' + id + '/questions',
                         type: "PUT",
                         dataType: "json",
                         success: function(data) {
+                            console.log("PUUUT")
                             console.log(data)
                         }
                     })
@@ -194,6 +199,21 @@
                 question_id = $('input[name=radioQ]:checked').val()
                 console.log(question_id)
                 updateAnswerstable(question_id)
+                document.getElementById("ListA").style.display = "block";
+                $.ajax({
+                    url: '/QA/' + id,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        info = data["QA"][question_id]
+                        console.log("cabeçalho");
+                        console.log(question_id);
+                        // document.getElementById("question").innerHTML = 'Question: ' + info["question"];
+                        // document.getElementById("time").innerHTML = 'Time: ' + info["time"];
+                        //document.getElementById("user").innerHTML = 'User: ' + info["user"] + ' ' + info["name"];
+                        document.getElementById("info").innerHTML = 'Question: ' + info["question"] + ' Time: ' + info["time"] + ' User: ' + info["user"] + ' ' + info["name"];
+                    }
+                })
             })
             $("#buttonNewQuestion").click(function() {
                 document.getElementById("newQ").style.display = "block";
@@ -202,17 +222,14 @@
                 console.log(pauseTime)
                 $("#resumetime").val(pauseTime)
                 document.getElementById("newTime").value = pauseTime;
-
             })
         });
     </script>
-
 </head>
 
 <body>
     <h1 style="margin-left:5px" id="desc"></h1>
     <div class="row">
-
         <div class="element1 col-md-5" style="margin-left:5px">
             <video id="videoPlayer" controls class="video-js vjs-default-skin" width="640" data-setup='{ "autoplay": true, "preload": "auto", "techOrder": ["youtube"], "sources": [{ "type": "video/youtube" }'>
             </video>
@@ -255,23 +272,32 @@
         </div>
         <button class="ui button" style="margin-left:5px" id="buttonAddQuestion">Add new Question</button>
     </div>
-    <h3>List of Answers</h3>
-    <table class="ui celled table selectable" id="ansTable">
-        <thead>
-            <tr>
-                <th style="width: 25%">User</th>
-                <th style="width: 25%">Name</th>
-                <th style="width: 50%">Answer</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-    <h3>Add a new Answer</h3>
-    <div class="ui input">
-        <input type="text" placeholder="Answer" id="newAnswer">
+    <div id="ListA" style="display:none">
+        <!-- <div style="display:table-cell">
+            <h3 style="float: left" id="question"></h3>
+            <h3 style="float: center" id="time"></h3>
+            <h3 style="float: right" id="user"></h3>
+        </div> -->
+        <h3 id="info"></h3>
+        <h3>List of Answers</h3>
+        <table class="ui celled table selectable" id="ansTable">
+            <thead>
+                <tr>
+                    <th style="width: 25%">User</th>
+                    <th style="width: 25%">Name</th>
+                    <th style="width: 50%">Answer</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <h3>Add a new Answer</h3>
+        <div class="ui input">
+            <input type="text" placeholder="Answer" id="newAnswer">
+        </div>
+        <button class="ui button" id="buttonAddAnswer">Add new Answer</button>
     </div>
-    <button class="ui button" id="buttonAddAnswer">Add new Answer</button>
+
 
 </body>
 

@@ -27,11 +27,12 @@ class YTVideo(Base):
     description = Column(String)
     url = Column(String)
     views = Column(Integer, default = 0)
+    num_questions = Column(Integer, default = 0)
     def __repr__(self):
-        return "<YouTubeVideo (id=%d Description=%s, URL=%s, Views=%s>" % (
-                                self.id, self.description, self.url,  self.views)
+        return "<YouTubeVideo (id=%d Description=%s, URL=%s, Views=%s, num_questions=%s>" % (
+                                self.id, self.description, self.url,  self.views, self.num_questions )
     def to_dictionary(self):
-        return {"video_id": self.id, "description": self.description, "url": self.url, "views": self.views}
+        return {"video_id": self.id, "description": self.description, "url": self.url, "views": self.views, "num_questions": self.num_questions}
 
 
 Base.metadata.create_all(engine) #Create tables for the data models
@@ -50,8 +51,9 @@ def listVideosDICT():
     lv = listVideos()
     for v in lv:
         vd = v.to_dictionary()
-        del(vd["url"])
-        del(vd["views"])
+        # del(vd["url"])
+        # del(vd["num_questions"])
+        # del(vd["views"])
         ret_list.append(vd)
     return ret_list
 
@@ -71,6 +73,14 @@ def newVideoView(id):
     session.close()
     return n
 
+
+def newQuestionSum(id):
+    b = session.query(YTVideo).filter(YTVideo.id==id).first()
+    b.num_questions+=1
+    n = b.num_questions
+    session.commit()
+    session.close()
+    return n
 
 def newVideo(description , url):
     vid = YTVideo(description = description, url = url)
