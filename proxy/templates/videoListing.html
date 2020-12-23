@@ -14,6 +14,13 @@
     <script src="http://vjs.zencdn.net/7.8.4/video.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/2.6.1/Youtube.min.js"></script>
 
+    <style>
+        body {
+            margin: 0 auto;
+            width: 95%;
+        }
+    </style>
+    
     <script>
         var n = '{{name}}'
 
@@ -111,10 +118,10 @@
     <table class="ui celled table selectable" id="videosTable">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Description</th>
-                <th>Views</th>
-                <th>Questions</th>
+                <th style="width: 15%">ID</th>
+                <th style="width: 55%">Description</th>
+                <th style="width: 15%">Views</th>
+                <th style="width: 15%">Questions</th>
             </tr>
         </thead>
         <tbody>
@@ -135,9 +142,9 @@
     <div class="ui input">
         <input type="text" placeholder="Video id" id="playVideoID">
     </div>
-    <button class="ui button" id="buttonPlayVideo">Play</button>
+    <button style="margin-bottom:25px;"class="ui button" id="buttonPlayVideo">Play</button>
 
-    <br>
+    </br>
     <button class="ui button" onclick="window.location='{{ url_for('logout') }}'">Logout</button>
 </body>
 

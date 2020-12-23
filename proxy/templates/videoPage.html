@@ -18,10 +18,16 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
     <style>
-        table td .radio {
-            border: 1px solid red;
-            display: block;
+        body {
             margin: 0 auto;
+            width: 95%;
+        }
+
+        table th {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background: #fff;
         }
     </style>
 
@@ -90,7 +96,7 @@
                     data["QA"].forEach(q => {
                         console.log(q["time"] + " " + q["question"])
                         $('#questionsTable > tbody:last-child').
-                        append('<tr> <td>' + q["time"] + '</td><td>' + q["question"] + '</td><td style="text-align:center"> <input type="radio" name="radioQ" value=' + q["QA_id"] + '> </td></tr>');
+                        append('<tr> <td style="width: 25%">' + q["time"] + '</td><td style="width: 65%">' + q["question"] + '</td><td style="text-align:center; "width: 10%;> <input type="radio" name="radioQ" value=' + q["QA_id"] + '> </td></tr>');
                     });
                 }
             });
@@ -201,7 +207,8 @@
                 question_id = $('input[name=radioQ]:checked').val()
                 console.log(question_id)
                 updateAnswerstable(question_id)
-                document.getElementById("ListA").style.display = "block";
+                document.getElementById("ListA").style.display = "block"; 
+                document.getElementById("ListA").style.marginTop = "25px";
                 $.ajax({
                     url: '/QA/' + id + '/' + question_id,
                     type: "GET",
@@ -211,13 +218,15 @@
                         console.log("cabeçalho")
                         console.log(question_id);
                         console.log(data)
-                        document.getElementById("info").innerHTML = 'Question: ' + info["question"] + ' Time: ' + info["time"] + ' User: ' + info["user"] + ' ' + info["name"];
+                        document.getElementById("info1").innerHTML = 'Question: ' + info["question"] + ' Time: ' + info["time"];
+                        document.getElementById("info2").innerHTML = 'User: ' + info["user"] + ' ' + info["name"];
                     }
                 })
             })
 
             $("#buttonNewQuestion").click(function() {
                 document.getElementById("newQ").style.display = "block";
+                document.getElementById("newQ").style.marginTop = "5px";
                 vPlayer.pause()
                 var pauseTime = vPlayer.currentTime()
                 console.log(pauseTime)
@@ -233,16 +242,16 @@
 </head>
 
 <body>
-    <h1 style="margin-left:5px" id="desc"></h1>
+    <h2 style="margin-top:5px" id="desc"></h2>
     <div class="row">
-        <div class="element1 col-md-5" style="margin-left:5px">
+        <div class="element1 col-md-5">
             <video id="videoPlayer" controls class="video-js vjs-default-skin" width="640" data-setup='{ "autoplay": true, "preload": "auto", "techOrder": ["youtube"], "sources": [{ "type": "video/youtube" }'>
             </video>
         </div>
         <div class="element2 col-md-1">
         </div>
-        <div class="element3 col-md-5" style="height:20vw;overflow:auto;">
-            <table class="ui celled table selectable" style="width: 100%" id="questionsTable">
+        <div class="element3 col-md-5" style="height:26vw;overflow:auto;">
+            <table class="ui celled table selectable" id="questionsTable">
                 <thead>
                     <tr>
                         <th style="width: 25%">Time [s]</th>
@@ -256,49 +265,59 @@
         </div>
         <div class="element4 col-md-1">
         </div>
-
     </div>
-    <button style="margin-left:51vw; margin-top:5px;" class="ui button" id="buttonSeeAnswers">See Answers</button>
-    <h3 style="margin-left:5px">Control Video</h3>
-    <button class="ui button" style="margin-left:5px" id="buttonVideoPause">PAUSE Video</button>
-    <div class="ui input focus">
-        <input type="text" id="resumetime">
+    <div class="row">
+        <div style="margin-top:5px;" class="element1 col-md-6">
+            <button class="ui button" id="buttonVideoPause">PAUSE Video</button>
+            <div class="ui input focus">
+                <input type="text" id="resumetime">
+            </div>
+            <button class="ui button" id="buttonVideoResume">RESUME Video</button>
+        </div>
+        <div class="element1 col-md-6">
+            <button style="margin-top:5px;" class="ui button" id="buttonSeeAnswers">See Answers</button>
+        </div>
     </div>
-    <button class="ui button" id="buttonVideoResume">RESUME Video</button>
+    
+    
+    
     </br>
-    <button style="margin-left:5px" class="ui button" id="buttonNewQuestion">New Question</button>
+    <button class="ui button" id="buttonNewQuestion">New Question</button>
     <div id="newQ" style="display:none">
-        <h3 style="margin-left:5px">Add a new Question</h3>
+        <h3>Add a new Question</h3>
         <div class="ui input">
             <input type="text" placeholder="Time" id="newTime" disabled="disabled">
         </div>
         <div class="ui input">
-            <input type="text" placeholder="Question" style="margin-left:5px" id="newQuestion">
+            <input type="text" placeholder="Question" id="newQuestion">
         </div>
-        <button class="ui button" style="margin-left:5px" id="buttonAddQuestion">Add new Question</button>
+        <button class="ui button" id="buttonAddQuestion">Add new Question</button>
     </div>
     <div id="ListA" style="display:none">
-        <h3 style="margin-left:5px" id="info"></h3>
-        <h3 style="margin-left:5px">List of Answers</h3>
-        <table style="margin-left:5px" class="ui celled table selectable" id="ansTable">
+        <h3 id="info1"></h3>
+        <h3 id="info2"></h3>
+        <h3>List of Answers</h3>
+        <table class="ui celled table selectable" id="ansTable">
             <thead>
                 <tr>
-                    <th style="width: 25%">User</th>
+                    <th style="width: 15%">User</th>
                     <th style="width: 25%">Name</th>
-                    <th style="width: 50%">Answer</th>
+                    <th style="width: 60%">Answer</th>
                 </tr>
             </thead>
             <tbody>
             </tbody>
         </table>
-        <h3 style="margin-left:5px">Add a new Answer</h3>
+        <h3>Add a new Answer</h3>
         <div class="ui input">
-            <input style="margin-left:5px" type="text" placeholder="Answer" id="newAnswer">
+            <textarea cols="50" type="text" placeholder="Answer" id="newAnswer" placeholder="Add answer"></textarea>
+            
         </div>
         <button class="ui button" id="buttonAddAnswer">Add new Answer</button>
     </div>
-    <button class="ui button" id="buttonGoBack">Back</button>
-
+    <div>
+        <button style="margin-top:25px;" class="ui button" id="buttonGoBack">Back</button>
+    </div> 
 </body>
 
 </html>
