@@ -13,6 +13,9 @@
     <link href="https://vjs.zencdn.net/7.8.4/video-js.css" rel="stylesheet" />
     <script src="http://vjs.zencdn.net/7.8.4/video.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/2.6.1/Youtube.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
     <style>
         body {
@@ -20,7 +23,7 @@
             width: 95%;
         }
     </style>
-    
+
     <script>
         var n = '{{name}}'
 
@@ -127,7 +130,7 @@
         <tbody>
         </tbody>
     </table>
-    <button class="ui button" id="buttonUpdateVideotable">Update List</button>
+    <button class="btn btn-info" id="buttonUpdateVideotable">Update List</button>
 
     <h3>Add a new Video</h3>
     <div class="ui input">
@@ -136,16 +139,16 @@
     <div class="ui input">
         <input type="text" placeholder="Video Description" id="newVideoDescription">
     </div>
-    <button class="ui button" id="buttonAddVideo">Add new Video</button>
+    <button class="btn btn-info" id="buttonAddVideo">Add new Video</button>
 
     <h3>Play Video</h3>
     <div class="ui input">
         <input type="text" placeholder="Video id" id="playVideoID">
     </div>
-    <button style="margin-bottom:25px;"class="ui button" id="buttonPlayVideo">Play</button>
+    <button class="btn btn-info" id="buttonPlayVideo">Play</button>
 
     </br>
-    <button class="ui button" onclick="window.location='{{ url_for('logout') }}'">Logout</button>
+    <button style="margin-bottom:25px; margin-top:25px;" class="btn btn-secondary" onclick="window.location='{{ url_for('logout') }}'">Logout</button>
 </body>
 
 </html>
