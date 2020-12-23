@@ -161,6 +161,8 @@
             $("#buttonAddQuestion").click(function() {
                     newTime = $("#newTime").val()
                     newQuestion = $("#newQuestion").val()
+                    document.getElementById("newTime").value = ""
+                    document.getElementById("newQuestion").value = ""
                     addNewQuestion(newTime, newQuestion)
                         //TODO 3 - get the values of #newVideoURL and newVideoDescription
                         // and pass those values to the addNewVideo function
@@ -183,6 +185,7 @@
             $("#buttonAddAnswer").click(function() {
                 newAnswer = $("#newAnswer").val()
                 question = $('input[name=radioQ]:checked').val()
+                document.getElementById("newAnswer").value = ""
                 console.log(user)
                 console.log(name)
                 console.log(newAnswer)
@@ -212,6 +215,7 @@
                     }
                 })
             })
+
             $("#buttonNewQuestion").click(function() {
                 document.getElementById("newQ").style.display = "block";
                 vPlayer.pause()
@@ -219,6 +223,10 @@
                 console.log(pauseTime)
                 $("#resumetime").val(pauseTime)
                 document.getElementById("newTime").value = pauseTime;
+            })
+
+            $("#buttonGoBack").click(function() {
+                window.history.back() 
             })
         });
     </script>
@@ -289,7 +297,7 @@
         </div>
         <button class="ui button" id="buttonAddAnswer">Add new Answer</button>
     </div>
-
+    <button class="ui button" id="buttonGoBack">Back</button>
 
 </body>
 

@@ -86,6 +86,8 @@
             $("#buttonAddVideo").click(function() {
                 newVideoURl = $("#newVideoURL").val()
                 newVideoDESC = $("#newVideoDescription").val()
+                document.getElementById("newVideoURL").value = ""
+                document.getElementById("newVideoDescription").value = ""
                 addNewVideo(newVideoURl, newVideoDESC)
                     //TODO 3 - get the values of #newVideoURL and newVideoDescription
                     // and pass those values to the addNewVideo function
@@ -94,6 +96,7 @@
 
             $("#buttonPlayVideo").click(function() {
                 videoID = $("#playVideoID").val()
+                $("#playVideoID").val("")
                 window.location.href = "videoPage.html/" + videoID + "/" + n
             })
         });
