@@ -67,10 +67,19 @@ def listQADICT(id):
     lqa = listQA(id)
     for q in lqa:
         qa = q.to_dictionary()
-        # del(qa["video_id"])
-        # del(qa["user"])
-        # del(qa["name"])
-        #del(qa["num_questions"])
+        ret_list.append(qa)
+    print(ret_list)
+    return ret_list
+
+def listQuestion(id, q_id):
+    return session.query(QA).filter(QA.video_id==id, QA.id==q_id)
+    session.close()
+
+def listQuestionDICT(id, q_id):
+    ret_list = []
+    lqa = listQuestion(id, q_id)
+    for q in lqa:
+        qa = q.to_dictionary()
         ret_list.append(qa)
     print(ret_list)
     return ret_list

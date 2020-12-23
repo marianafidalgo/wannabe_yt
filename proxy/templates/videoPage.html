@@ -87,12 +87,11 @@
                 success: function(data) {
                     console.log(data);
                     $('#questionsTable > tbody:last-child').empty()
-                    for (var i = 0; i < data["QA"].length; i++) {
-                        q = data["QA"][i]
+                    data["QA"].forEach(q => {
                         console.log(q["time"] + " " + q["question"])
                         $('#questionsTable > tbody:last-child').
-                        append('<tr> <td>' + q["time"] + '</td><td>' + q["question"] + '</td><td style="text-align:center"> <input type="radio" name="radioQ" value=' + i + '> </td></tr>');
-                    }
+                        append('<tr> <td>' + q["time"] + '</td><td>' + q["question"] + '</td><td style="text-align:center"> <input type="radio" name="radioQ" value=' + q["QA_id"] + '> </td></tr>');
+                    });
                 }
             });
         }
@@ -117,7 +116,7 @@
 
         $(document).ready(function() {
             var vPlayer = videojs('videoPlayer');
-            updateQuestiontable()
+            var n_ques = updateQuestiontable()
             $.ajax({
                 //TODO 9 - increase the number of views
                 url: '/videos/' + id + "/views",
@@ -138,7 +137,7 @@
                     vPlayer.play()
                 })
                 //TODO 6 - get the value of #playVideoID
-            $.ajax({
+                $.ajax({
                 //TODO 7 - retrieve the corresponding URL by
                 //        calling the /videos/<id>/ REST endpoint)
                 url: '/videos/' + id + '/',
@@ -191,7 +190,7 @@
                 if (question > 0) {
                     addNewAnswer(user, name, newAnswer, question)
                 } else
-                    alert("Please choose answer")
+                    alert("Please choose a question to answer")
                     //TODO 3 - get the values of #newVideoURL and newVideoDescription
                     // and pass those values to the addNewVideo function
             })
@@ -201,16 +200,14 @@
                 updateAnswerstable(question_id)
                 document.getElementById("ListA").style.display = "block";
                 $.ajax({
-                    url: '/QA/' + id,
+                    url: '/QA/' + id + '/' + question_id,
                     type: "GET",
                     dataType: "json",
                     success: function(data) {
-                        info = data["QA"][question_id]
-                        console.log("cabeçalho");
+                        info = data["QA"][0]
+                        console.log("cabeçalho")
                         console.log(question_id);
-                        // document.getElementById("question").innerHTML = 'Question: ' + info["question"];
-                        // document.getElementById("time").innerHTML = 'Time: ' + info["time"];
-                        //document.getElementById("user").innerHTML = 'User: ' + info["user"] + ' ' + info["name"];
+                        console.log(data)
                         document.getElementById("info").innerHTML = 'Question: ' + info["question"] + ' Time: ' + info["time"] + ' User: ' + info["user"] + ' ' + info["name"];
                     }
                 })
@@ -261,26 +258,21 @@
     </div>
     <button class="ui button" id="buttonVideoResume">RESUME Video</button>
     </br>
-    <button class="ui button" id="buttonNewQuestion">New Question</button>
+    <button style="margin-left:5px" class="ui button" id="buttonNewQuestion">New Question</button>
     <div id="newQ" style="display:none">
-        <h3>Add a new Question</h3>
+        <h3 style="margin-left:5px">Add a new Question</h3>
         <div class="ui input">
             <input type="text" placeholder="Time" id="newTime" disabled="disabled">
         </div>
         <div class="ui input">
-            <input type="text" placeholder="Question" id="newQuestion">
+            <input type="text" placeholder="Question" style="margin-left:5px" id="newQuestion">
         </div>
         <button class="ui button" style="margin-left:5px" id="buttonAddQuestion">Add new Question</button>
     </div>
     <div id="ListA" style="display:none">
-        <!-- <div style="display:table-cell">
-            <h3 style="float: left" id="question"></h3>
-            <h3 style="float: center" id="time"></h3>
-            <h3 style="float: right" id="user"></h3>
-        </div> -->
-        <h3 id="info"></h3>
-        <h3>List of Answers</h3>
-        <table class="ui celled table selectable" id="ansTable">
+        <h3 style="margin-left:5px" id="info"></h3>
+        <h3 style="margin-left:5px">List of Answers</h3>
+        <table style="margin-left:5px" class="ui celled table selectable" id="ansTable">
             <thead>
                 <tr>
                     <th style="width: 25%">User</th>
@@ -291,9 +283,9 @@
             <tbody>
             </tbody>
         </table>
-        <h3>Add a new Answer</h3>
+        <h3 style="margin-left:5px">Add a new Answer</h3>
         <div class="ui input">
-            <input type="text" placeholder="Answer" id="newAnswer">
+            <input style="margin-left:5px" type="text" placeholder="Answer" id="newAnswer">
         </div>
         <button class="ui button" id="buttonAddAnswer">Add new Answer</button>
     </div>

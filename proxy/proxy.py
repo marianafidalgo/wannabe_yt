@@ -88,6 +88,15 @@ def questions(v_id):
     print(questions)
     return questions
 
+@app.route("/QA/<v_id>/<q_id>", methods = ["GET"])
+def question(v_id, q_id):
+    resp = requests.get("http://127.0.0.1:7000/QA/"+ v_id + '/' + q_id)
+    question = {}
+    if(resp.status_code == 200):
+        question = resp.json()
+    print(question)
+    return question
+
 @app.route("/Answers", methods = ["POST"])
 def new_answer():
     j = request.get_json()

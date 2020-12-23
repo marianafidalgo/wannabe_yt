@@ -16,6 +16,11 @@ def returnsQAJSON(id):
     print(listQADICT(id))
     return {"QA": listQADICT(id)}
 
+@app.route("/QA/<id>/<q_id>", methods=['GET'])
+def returnsQuestionJSON(id, q_id):
+    print(listQuestionDICT(id, q_id))
+    return {"QA": listQuestionDICT(id, q_id)}
+
 @app.route("/Answers/<id>", methods=['GET'])
 def returnsAJSON(id):
     print(listAnswersDICT(id))
