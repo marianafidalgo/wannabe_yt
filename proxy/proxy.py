@@ -23,7 +23,12 @@ def log_request_info():
         timestamp = str(datetime.now())
         user = content["name"]
         data = {"data_type": data_type, "content": content, "timestamp": timestamp, "user": user}
-        requests.post("http://127.0.0.1:6000/logs", json = data)
+        requests.post("http://127.0.0.1:6000/logs/DC", json = data)
+    else:
+        timestamp = str(datetime.now())
+        url = request.url
+        data = {"timestamp": timestamp, "url": url}
+        requests.post("http://127.0.0.1:6000/logs/Events", json = data)
 
 @app.route("/login")
 def login():
@@ -136,8 +141,17 @@ def answers_qid(id):
     return answers
 
 @app.route("/logs/DataCreation", methods = ["GET"])
-def logs():
+def logs_dc():
     resp = requests.get("http://127.0.0.1:6000/logs/DataCreation")
+    logs = {}
+    if(resp.status_code == 200):
+        logs = resp.json()
+    print(logs)
+    return logs
+
+@app.route("/logs/Events", methods = ["GET"])
+def logs_events():
+    resp = requests.get("http://127.0.0.1:6000/logs/Events")
     logs = {}
     if(resp.status_code == 200):
         logs = resp.json()

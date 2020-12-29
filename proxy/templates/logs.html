@@ -25,7 +25,6 @@
     </style>
 
     <script>
-
         function updateDataCreationtable() {
             $.ajax({
                 url: '/logs/DataCreation',
@@ -37,35 +36,53 @@
                     data["DataCreation"].forEach(dc => {
                         console.log(dc["video_id"] + " " + dc["description"])
                         $('#dataCreationTable > tbody:last-child').
-                        append('<tr> <td>' + dc["timestamp"] + '</td><td>' + dc["data_type"] + '</td><td>' + dc["content"]+ ' </td><td>' + dc["user"] + '</td></tr>');
+                        append('<tr> <td>' + dc["timestamp"] + '</td><td>' + dc["data_type"] + '</td><td>' + dc["content"] + ' </td><td>' + dc["user"] + '</td></tr>');
                     });
                 }
             });
         }
 
-        function change_tbl(dhi) {
-            if (dhi == '') {
-                return;
-            }
-            $('#tbl_div > div').css('display', 'none');
-            $('#' + dhi).css('display', 'block');
+        function updateEventtable() {
+            $.ajax({
+                url: '/logs/Events',
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    console.log(data);
+                    $('#eventsTable > tbody:last-child').empty()
+                    data["Events"].forEach(e => {
+                        $('#eventsTable > tbody:last-child').
+                        append('<tr> <td>' + e["timestamp"] + '</td><td>' + e["url"] + '</td></tr>');
+                    });
+                }
+            });
         }
+
+        jQuery(function() {
+            $('#table-select').change(function() {
+                $('#tbl_div > div').css('display', 'none');
+                if (this.value) {
+                    console.log(this.value)
+                    $('#' + this.value).css('display', 'block');
+                }
+            }).change(); //this is used to trigger a manual change handler initially so that the state is properly set on page load
+        })
 
         $(document).ready(function() {
             updateDataCreationtable()
-            
+            updateEventtable()
+
         });
     </script>
 </head>
 
 <body>
     <h3>List of logs</h3>
-    <select onchange="change_tbl(this.value)">
-        <option value="">select table</option>
-        <option value="tb1">table 1</option>
-        <option value="tb2">table 2</option>
+    <select id="table-select">
+        <option value="tb1" selected>Data Creation Event Logs</option>
+        <option value="tb2">Message Event Logs</option>
     </select>
-    <div id="tbl_div" style="display:none">
+    <div id="tbl_div">
         <div id="tb1">
             <table class="ui celled table selectable" id="dataCreationTable">
                 <thead>
@@ -85,8 +102,7 @@
                 <thead>
                     <tr>
                         <th style="width: 15%">Timestamp</th>
-                        <th style="width: 55%">IP</th>
-                        <th style="width: 15%">Endpoint</th>
+                        <th style="width: 55%">URL</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -95,5 +111,7 @@
         </div>
     </div>
 </body>
+
+</html>
 
 </html>

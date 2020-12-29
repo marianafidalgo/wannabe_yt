@@ -24,14 +24,13 @@ Base = declarative_base()
 class Events(Base):
     __tablename__ = 'Events'
     id = Column(Integer, primary_key=True)
-    ip = Column(String)
-    endpoint = Column(String)
+    url = Column(String)
     timestamp = Column(String)
     def __repr__(self):
-        return "<Events (id=%d, ip =%s, endpoint =%s, timestamp =%s>" % (
-                        self.id, self.ip, self.endpoint, self.timestamp)
+        return "<Events (id=%d, ip =%s, url =%s, timestamp =%s>" % (
+                        self.id, self.url, self.timestamp)
     def to_dictionary(self):
-        return {"id": self.id, "ip": self.ip, "endpoint": self.endpoint,"timestamp": self.timestamp}
+        return {"id": self.id, "url": self.url,"timestamp": self.timestamp}
 
 class DataCreation(Base):
     __tablename__ = 'DataCreation'
@@ -56,20 +55,20 @@ session = scoped_session(Session)
 #session = Session()
 
 
-def listLogs():
+def listDC():
     return session.query(DataCreation).all()
     session.close()
 
-def listLogsDICT():
+def listDCDICT():
     ret_list = []
-    logs = listLogs()
+    logs = listDC()
     for l in logs:
         ls = l.to_dictionary()
         ret_list.append(ls)
     print(ret_list)
     return ret_list
 
-def newLog(data_type, content, timestamp, user):
+def newDC(data_type, content, timestamp, user):
     uid = DataCreation(data_type = data_type, content = content, timestamp = timestamp, user = user)
     try:
         session.add(uid)
@@ -81,6 +80,30 @@ def newLog(data_type, content, timestamp, user):
     except:
         return None
 
+def listEvent():
+    return session.query(Events).all()
+    session.close()
+
+def listEventsDICT():
+    ret_list = []
+    logs = listEvent()
+    for l in logs:
+        ls = l.to_dictionary()
+        ret_list.append(ls)
+    print(ret_list)
+    return ret_list
+
+def newEvent(timestamp, url):
+    uid = Events(timestamp = timestamp, url = url)
+    try:
+        session.add(uid)
+        session.commit()
+        session.refresh(uid)
+        v = uid.id
+        session.close()
+        return v
+    except:
+        return None
 
 if __name__ == "__main__":
     pass
