@@ -24,15 +24,16 @@ Base = declarative_base()
 class YTVideo(Base):
     __tablename__ = 'YTVideo'
     id = Column(Integer, primary_key=True)
+    user = Column(String)
     description = Column(String)
     url = Column(String)
     views = Column(Integer, default = 0)
     num_questions = Column(Integer, default = 0)
     def __repr__(self):
-        return "<YouTubeVideo (id=%d Description=%s, URL=%s, Views=%s, num_questions=%s>" % (
-                                self.id, self.description, self.url,  self.views, self.num_questions )
+        return "<YouTubeVideo (id=%d, user=%s, description=%s, url=%s, views=%d, num_questions=%d>" % (
+                                self.id, self.user, self.description, self.url,  self.views, self.num_questions )
     def to_dictionary(self):
-        return {"video_id": self.id, "description": self.description, "url": self.url, "views": self.views, "num_questions": self.num_questions}
+        return {"video_id": self.id, "user":self.user, "description": self.description, "url": self.url, "views": self.views, "num_questions": self.num_questions}
 
 
 Base.metadata.create_all(engine) #Create tables for the data models
@@ -82,8 +83,8 @@ def newQuestionSum(id):
     session.close()
     return n
 
-def newVideo(description , url):
-    vid = YTVideo(description = description, url = url)
+def newVideo(user, description , url):
+    vid = YTVideo(user=user,description = description, url = url)
     try:
         session.add(vid)
         session.commit()

@@ -7,9 +7,6 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-user_id = ''
-user_name = ''
-
 @app.before_request
 def log_request_info():
     method = request.method
@@ -18,10 +15,9 @@ def log_request_info():
     if(method == 'POST'):
         data_type = request.content_type
         content = request.get_json()
-        print(content)
+        print(content["user"])
         timestamp = str(datetime.now())
-        user = "M"
-        data = {"data_type": data_type, "content": content, "timestamp": timestamp, "user": user}
+        data = {"data_type": data_type, "content": content, "timestamp": timestamp, "user": content["user"]}
         requests.post("http://127.0.0.1:6000/logs/DC", json = data)
     else:
         timestamp = str(datetime.now())
@@ -43,9 +39,9 @@ def logout():
 @app.route("/logged_In/<id>/<name>", methods = ["GET"])
 def logged_In(id, name):
     j = request.get_json()
-    resp = requests.post("http://127.0.0.1:9000/stats/user/"+ id )
-    if(resp.status_code == 200):
-        print(j)
+    # resp = requests.post("http://127.0.0.1:5000/stats/user/"+ id )
+    # if(resp.status_code == 200):
+    #     print(j)
     return render_template("videoListing.html", id = id, name = name)
 
 @app.route("/logged_In/<user>/videoPage.html/<id>/<name>", methods = ["GET"])
@@ -71,7 +67,7 @@ def videos():
 @app.route("/videos", methods = ["POST"])
 def new_video():
     j = request.get_json()
-    resp = requests.post("http://127.0.0.1:8000/videos/", json = j)
+    resp = requests.post("http://127.0.0.1:8000/videos", json = j)
     if(resp.status_code == 200):
         print(j)
     return j
@@ -104,7 +100,6 @@ def num_questions(id,):
 @app.route("/QA", methods = ["POST"])
 def new_question():
     j = request.get_json()
-    #print(j)
     resp = requests.post("http://127.0.0.1:7000/QA", json = j)
     if(resp.status_code == 200):
         print(j)
@@ -166,7 +161,7 @@ def logs_events():
 
 @app.route("/stats", methods = ["GET"])
 def stats():
-    resp = requests.get("http://127.0.0.1:9000/stats")
+    resp = requests.get("http://127.0.0.1:5000/stats")
     stats = {}
     if(resp.status_code == 200):
         stats = resp.json()
@@ -175,7 +170,7 @@ def stats():
 
 @app.route("/stats/views/<user>", methods = ['PUT', 'PATCH'])
 def num_views(user):
-    resp = requests.put("http://127.0.0.1:9000/stats/views/" + user)
+    resp = requests.put("http://127.0.0.1:5000/stats/views/" + user)
     num_v = {}
     if(resp.status_code == 200):
         num_v = resp.json()
@@ -183,7 +178,7 @@ def num_views(user):
 
 @app.route("/stats/questions/<user>", methods = ['PUT', 'PATCH'])
 def num_questions_(user):
-    resp = requests.put("http://127.0.0.1:9000/stats/questions/" + user)
+    resp = requests.put("http://127.0.0.1:5000/stats/questions/" + user)
     num_q = {}
     if(resp.status_code == 200):
         num_q = resp.json()
@@ -191,7 +186,7 @@ def num_questions_(user):
 
 @app.route("/stats/answers/<user>", methods = ['PUT', 'PATCH'])
 def num_answers(user):
-    resp = requests.put("http://127.0.0.1:9000/stats/answers/" + user)
+    resp = requests.put("http://127.0.0.1:5000/stats/answers/" + user)
     num_a = {}
     if(resp.status_code == 200):
         num_a = resp.json()
@@ -199,7 +194,7 @@ def num_answers(user):
 
 @app.route("/stats/videos_reg/<user>", methods = ['PUT', 'PATCH'])
 def num_videos_reg(user):
-    resp = requests.put("http://127.0.0.1:9000/stats/videos_reg/" + user)
+    resp = requests.put("http://127.0.0.1:5000/stats/videos_reg/" + user)
     num_v = {}
     if(resp.status_code == 200):
         num_v = resp.json()

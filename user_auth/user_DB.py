@@ -24,14 +24,19 @@ Base = declarative_base()
 class Users(Base):
     __tablename__ = 'Users'
     id = Column(Integer, primary_key=True)
-    number = Column(String)
+    user = Column(String)
     name = Column(String)
     role = Column(String)
+    videos_reg = Column(Integer, default = 0)
+    views = Column(Integer, default = 0)
+    questions = Column(Integer, default = 0)
+    answers = Column(Integer, default = 0)
     def __repr__(self):
-        return "<User (id=%d, number=%s, name=%s, role=%s>" % (
-                                self.id, self.number, self.name, self.role)
+        return "<Users (id=%d, user=%s, name = %s, role=%s, videos_reg =%d, views =%d, questions =%d, answers =%d>" % (
+                        self.id, self.user, self.name, self.role, self.videos_reg, self.views, self.questions, self.answers)
     def to_dictionary(self):
-        return {"user_id": self.id, "number": self.number, "name": self.name, "role": self.role}
+        return {"id": self.id, "user": self.user, "name" : self.name, "role" : self.role, "videos_reg": self.videos_reg, "views": self.views, "questions": self.questions, "answers": self.answers}
+
 
 
 Base.metadata.create_all(engine) #Create tables for the data models
@@ -45,26 +50,23 @@ def listUsers():
     return session.query(Users).all()
     session.close()
 
-# def listVideosDICT():
-#     ret_list = []
-#     lv = listVideos()
-#     for v in lv:
-#         vd = v.to_dictionary()
-#         del(vd["url"])
-#         del(vd["views"])
-#         ret_list.append(vd)
-#     return ret_list
 
-def getUser(number):
-     v =  session.query(Users).filter(Users.number==number).scalar()
+def getUser(user):
+     v =  session.query(Users).filter(Users.user==user).scalar()
      session.close()
      return v
 
-def getUserDICT(id):
-    return getUser(id).to_dictionary()
+def listUsersDICT():
+    ret_list = []
+    logs = listUsers()
+    for l in logs:
+        ls = l.to_dictionary()
+        ret_list.append(ls)
+    print(ret_list)
+    return ret_list
 
-def newUser(number, name, role):
-    uid = Users(number = number, name = name, role = role)
+def newUser(user, name, role):
+    uid = Users(user = user, name = name, role = role)
     try:
         session.add(uid)
         session.commit()
@@ -74,6 +76,39 @@ def newUser(number, name, role):
     except:
         return None
 
+def newVideoView(user):
+    b = session.query(Users).filter(Users.user==user).first()
+    b.views+=1
+    n = b.views
+    session.commit()
+    session.close()
+    return n
+
+
+def newQuestion(user):
+    b = session.query(Users).filter(Users.user==user).first()
+    b.questions+=1
+    n = b.questions
+    session.commit()
+    session.close()
+    return n
+
+def newAnswer(user):
+    b = session.query(Users).filter(Users.user==user).first()
+    b.answers+=1
+    n = b.answers
+    session.commit()
+    session.close()
+    return n
+
+def newVideoReg(user):
+    b = session.query(Users).filter(Users.user==user).first()
+    b.videos_reg+=1
+    n = b.videos_reg
+    print(n)
+    session.commit()
+    session.close()
+    return n
 
 
 if __name__ == "__main__":

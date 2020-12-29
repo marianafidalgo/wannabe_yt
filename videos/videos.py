@@ -8,7 +8,6 @@ app = Flask(__name__)
 
 @app.route("/logout")
 def logout():
-    print("log1")
     return redirect('http://127.0.0.1:7000/logout')
 
 
@@ -25,14 +24,14 @@ def returnSingleVideoJSON(id):
     except:
         abort(404)
 
-@app.route("/videos/", methods=['POST'])
+@app.route("/videos", methods=['POST'])
 def createNewVideo():
     j = request.get_json()
     print (type(j))
     ret = False
     try:
-        print(j["description"])
-        ret = newVideo(j["description"], j["url"])
+        print(j["user"])
+        ret = newVideo(j["user"],j["description"], j["url"])
     except:
         abort(400)
         #the arguments were incorrect

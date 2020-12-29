@@ -96,22 +96,66 @@ def logout():
     return redirect("http://127.0.0.1:4000/")
 
 
-@app.route('/private')
-def private_page():
-    #this page can only be accessed by a authenticated user
+# @app.route('/private')
+# def private_page():
+#     #this page can only be accessed by a authenticated user
 
-    # verification of the user is  logged in
-    if fenix_blueprint.session.authorized == False:
-        #if not logged in browser is redirected to login page (in this case FENIX handled the login)
-        return redirect(url_for("fenix-example.login"))
-    else:
-        #if the user is authenticated then a request to FENIX is made
-        resp = fenix_blueprint.session.get("/api/fenix/v1/person/")
-        #resp contains the response made to /api/fenix/vi/person (information about current user)
-        data = resp.json()
-        print(resp.json())
-        return render_template("privPage.html", username=data['username'], name=data['name'])
+#     # verification of the user is  logged in
+#     if fenix_blueprint.session.authorized == False:
+#         #if not logged in browser is redirected to login page (in this case FENIX handled the login)
+#         return redirect(url_for("fenix-example.login"))
+#     else:
+#         #if the user is authenticated then a request to FENIX is made
+#         resp = fenix_blueprint.session.get("/api/fenix/v1/person/")
+#         #resp contains the response made to /api/fenix/vi/person (information about current user)
+#         data = resp.json()
+#         print(resp.json())
+#         return render_template("privPage.html", username=data['username'], name=data['name'])
 
+# @app.route("/stats/user/<user>", methods=['POST'])
+# def newU(user):
+#     ret = False
+#     try:
+#         ret = newUser(user)
+#     except:
+#         abort(400)
+#         #the arguments were incorrect
+
+@app.route("/stats/views/<user>", methods=['PUT', 'PATCH'])
+def newV(user):
+    try:
+        return {"user":user, "views": newVideoView(user)}
+    except:
+        abort(404)
+
+@app.route("/stats/questions/<user>", methods=['PUT', 'PATCH'])
+def newQ(user):
+    try:
+        return {"user":user, "num_questions": newQuestion(user)}
+    except:
+        abort(404)
+
+@app.route("/stats/answers/<user>", methods=['PUT', 'PATCH'])
+def newA(user):
+    try:
+        return {"user":user, "views": newAnswer(user)}
+    except:
+        abort(404)
+
+@app.route("/stats/videos_reg/<user>", methods=['PUT', 'PATCH'])
+def newVideo(user):
+    print("olaaa")
+    print(user)
+    try:
+        return {"user":user, "videos_reg": newVideoReg(user)}
+    except:
+        abort(404)
+
+
+@app.route("/stats", methods=['GET'])
+def returnsStats():
+    print(listUsersDICT())
+    return {"Users": listUsersDICT()}
 
 
 if __name__ == '__main__':

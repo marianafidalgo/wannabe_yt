@@ -44,7 +44,7 @@ def createQuestion():
     ret = False
     try:
         print(j["time"])
-        ret = newQuestion(j["v_id"], j["user"], j["name"], j["time"], j["question"])
+        ret = newQuestion(j["video_id"], j["user"], j["name"], j["time"], j["question"])
     except:
         abort(400)
         #the arguments were incorrect

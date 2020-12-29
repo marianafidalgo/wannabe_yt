@@ -36,7 +36,7 @@
                     data["DataCreation"].forEach(dc => {
                         console.log(dc["video_id"] + " " + dc["description"])
                         $('#dataCreationTable > tbody:last-child').
-                        append('<tr> <td>' + dc["timestamp"] + '</td><td>' + dc["data_type"] + '</td><td>' + dc["content"] + ' </td><td>' + dc["user"] + '</td></tr>');
+                        append('<tr> <td>' + dc["timestamp"] + '</td><td>' + dc["user"] + '</td><td>' + dc["content"] + ' </td><td>' + dc["data_type"] + '</td></tr>');
                     });
                 }
             });
@@ -91,9 +91,9 @@
                 <thead>
                     <tr>
                         <th style="width: 15%">Timestamp</th>
-                        <th style="width: 15%">Data Type</th>
-                        <th style="width: 55%">Data Content</th>
                         <th style="width: 15%">User</th>
+                        <th style="width: 55%">Data Content</th>
+                        <th style="width: 15%">Data Type</th>
                     </tr>
                 </thead>
                 <tbody>
