@@ -16,7 +16,7 @@ if path.exists(DATABASE_FILE):
     db_exists = True
     print("\t database already exists")
 
-engine = create_engine('sqlite:///%s'%(DATABASE_FILE), echo=False) #echo = True shows all SQL calls
+engine = create_engine('sqlite:///%s'%(DATABASE_FILE), connect_args={'check_same_thread': False}, echo=False) #echo = True shows all SQL calls
 
 Base = declarative_base()
 

@@ -26,10 +26,11 @@
 
     <script>
         var n = '{{name}}'
+        var id = '{{id}}'
 
         function getVideoInfo(videoID) {
             $.ajax({
-                url: '/videos/' + videoID + '/',
+                url: '/videos/' + videoID,
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -83,6 +84,15 @@
                     updateVideostable()
                 }
             });
+
+            $.ajax({
+                url: '/stats/videos_reg/' + id,
+                type: "PUT",
+                dataType: "json",
+                success: function(data) {
+                    console.log(data)
+                }
+            });
         }
         $(document).ready(function() {
 
@@ -114,6 +124,10 @@
 
             $("#buttonLogs").click(function() {
                 window.location.href = "logs/show"
+            })
+
+            $("#buttonStats").click(function() {
+                window.location.href = "stats"
             })
 
         });
@@ -153,10 +167,10 @@
         <input type="text" placeholder="Video id" id="playVideoID">
     </div>
     <button class="btn btn-info" id="buttonPlayVideo">Play</button>
-</br>
+    </br>
     <div id="Admin">
         <button class="btn btn-primary" style="margin-top:25px;" id="buttonLogs">Logs</button>
-        <button class="btn btn-primary" style="margin-top:25px;" id="buttonStats">Statistics</button>
+        <button class="btn btn-primary" style="margin-top:25px;" id="buttonStats">Users Statistics</button>
     </div>
     </br>
     <button style="margin-bottom:25px; margin-top:25px;" class="btn btn-secondary" onclick="window.location='{{ url_for('logout') }}'">Logout</button>

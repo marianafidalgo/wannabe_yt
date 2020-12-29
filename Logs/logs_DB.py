@@ -27,7 +27,7 @@ class Events(Base):
     url = Column(String)
     timestamp = Column(String)
     def __repr__(self):
-        return "<Events (id=%d, ip =%s, url =%s, timestamp =%s>" % (
+        return "<Events (id=%d, url =%s, timestamp =%s>" % (
                         self.id, self.url, self.timestamp)
     def to_dictionary(self):
         return {"id": self.id, "url": self.url,"timestamp": self.timestamp}

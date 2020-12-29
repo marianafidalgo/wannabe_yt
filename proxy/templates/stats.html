@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.css">
+    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-xmlrpc/0.4.3/jquery.xmlrpc.js">
+    </script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <link href="https://vjs.zencdn.net/7.8.4/video-js.css" rel="stylesheet" />
+    <script src="http://vjs.zencdn.net/7.8.4/video.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/2.6.1/Youtube.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <style>
+        body {
+            margin: 0 auto;
+            width: 95%;
+        }
+    </style>
+
+    <script>
+        function updateStatstable() {
+            $.ajax({
+                url: '/stats',
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    console.log(data);
+                    $('#statsTable > tbody:last-child').empty()
+                    data["Stats"].forEach(s => {
+                        $('#statsTable > tbody:last-child').
+                        append('<tr> <td>' + s["user"] + '</td><td>' + s["views"] + '</td><td>' + s["questions"] + ' </td><td>' + s["answers"] + ' </td><td>' + s["videos_reg"] + '</td></tr>');
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            updateStatstable()
+
+        });
+    </script>
+</head>
+
+<body>
+    <h3>User statistics</h3>
+
+    <table class="ui celled table selectable" id="statsTable">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Total Views</th>
+                <th>Questions made</th>
+                <th>Answers made</th>
+                <th>Videos Registered</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+</body>
+
+</html>
+
+</html>

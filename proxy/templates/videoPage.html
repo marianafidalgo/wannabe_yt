@@ -22,7 +22,7 @@
             margin: 0 auto;
             width: 95%;
         }
-
+        
         table th {
             position: sticky;
             top: 0;
@@ -83,6 +83,15 @@
                     updateAnswerstable(data.question)
                 }
             });
+
+            $.ajax({
+                url: '/stats/answers/' + user,
+                type: "PUT",
+                dataType: "json",
+                success: function(data) {
+                    console.log(data)
+                }
+            });
         }
 
         function updateQuestiontable() {
@@ -131,7 +140,17 @@
                 success: function(data) {
                     console.log(data)
                 }
-            })
+            });
+
+            $.ajax({
+                url: '/stats/views/' + user,
+                type: "PUT",
+                dataType: "json",
+                success: function(data) {
+                    console.log(data)
+                }
+            });
+
             $("#buttonVideoPause").click(function() {
                 vPlayer.pause()
                 var pauseTime = vPlayer.currentTime()
@@ -143,10 +162,10 @@
                     vPlayer.play()
                 })
                 //TODO 6 - get the value of #playVideoID
-                $.ajax({
+            $.ajax({
                 //TODO 7 - retrieve the corresponding URL by
                 //        calling the /videos/<id>/ REST endpoint)
-                url: '/videos/' + id + '/',
+                url: '/videos/' + id,
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
@@ -185,7 +204,16 @@
                             console.log("PUUUT")
                             console.log(data)
                         }
-                    })
+                    });
+
+                    $.ajax({
+                        url: '/stats/questions/' + user,
+                        type: "PUT",
+                        dataType: "json",
+                        success: function(data) {
+                            console.log(data)
+                        }
+                    });
                 })
                 // TODO 11 - update the table
             $("#buttonAddAnswer").click(function() {
@@ -207,7 +235,7 @@
                 question_id = $('input[name=radioQ]:checked').val()
                 console.log(question_id)
                 updateAnswerstable(question_id)
-                document.getElementById("ListA").style.display = "block"; 
+                document.getElementById("ListA").style.display = "block";
                 document.getElementById("ListA").style.marginTop = "25px";
                 $.ajax({
                     url: '/QA/' + id + '/' + question_id,
@@ -235,7 +263,7 @@
             })
 
             $("#buttonGoBack").click(function() {
-                window.history.back() 
+                window.history.back()
             })
         });
     </script>
@@ -278,9 +306,9 @@
             <button style="margin-top:5px;" class="btn btn-info" id="buttonSeeAnswers">See Answers</button>
         </div>
     </div>
-    
-    
-    
+
+
+
     </br>
     <button class="btn btn-info" id="buttonNewQuestion">New Question</button>
     <div id="newQ" style="display:none">
@@ -311,13 +339,13 @@
         <h3>Add a new Answer</h3>
         <div class="ui input">
             <textarea cols="50" type="text" placeholder="Answer" id="newAnswer" placeholder="Add answer"></textarea>
-            
+
         </div>
         <button class="btn btn-info" id="buttonAddAnswer">Add new Answer</button>
     </div>
     <div>
         <button style="margin-top:25px;" class="btn btn-secondary" id="buttonGoBack">Back</button>
-    </div> 
+    </div>
 </body>
 
 </html>

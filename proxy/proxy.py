@@ -19,9 +19,8 @@ def log_request_info():
         data_type = request.content_type
         content = request.get_json()
         print(content)
-        print(content["name"])
         timestamp = str(datetime.now())
-        user = content["name"]
+        user = "M"
         data = {"data_type": data_type, "content": content, "timestamp": timestamp, "user": user}
         requests.post("http://127.0.0.1:6000/logs/DC", json = data)
     else:
@@ -41,18 +40,25 @@ def logout():
     url = "http://127.0.0.1:4000/"
     return redirect(url)
 
-@app.route("/logged_In/<id>/logs/show", methods = ["GET"])
-def go_to_logs(id):
-    return render_template("logs.html")
-
 @app.route("/logged_In/<id>/<name>", methods = ["GET"])
 def logged_In(id, name):
-    user_name = name
+    j = request.get_json()
+    resp = requests.post("http://127.0.0.1:9000/stats/user/"+ id )
+    if(resp.status_code == 200):
+        print(j)
     return render_template("videoListing.html", id = id, name = name)
 
 @app.route("/logged_In/<user>/videoPage.html/<id>/<name>", methods = ["GET"])
 def logged_In_vid(user, id, name):
     return render_template("videoPage.html", user = user, name = name, id = id)
+
+@app.route("/logged_In/<id>/logs/show", methods = ["GET"])
+def go_to_logs(id):
+    return render_template("logs.html")
+
+@app.route("/logged_In/<id>/stats", methods = ["GET"])
+def go_to_stats(id):
+    return render_template("stats.html")
 
 @app.route("/videos", methods = ["GET"])
 def videos():
@@ -70,7 +76,7 @@ def new_video():
         print(j)
     return j
 
-@app.route("/videos/<id>/", methods = ["GET"])
+@app.route("/videos/<id>", methods = ["GET"])
 def video(id):
     resp = requests.get("http://127.0.0.1:8000/videos/" + id)
     video = {}
@@ -81,13 +87,13 @@ def video(id):
 @app.route("/videos/<id>/views", methods = ['PUT', 'PATCH'])
 def video_views(id):
     resp = requests.put("http://127.0.0.1:8000/videos/" + id + "/views")
-    video = {}
+    num_vw = {}
     if(resp.status_code == 200):
-        video = resp.json()
-    return video
+        num_vw = resp.json()
+    return num_vw
 
 @app.route("/videos/<id>/questions", methods = ['PUT', 'PATCH'])
-def num_questions(id):
+def num_questions(id,):
     resp = requests.put("http://127.0.0.1:8000/videos/" + id + "/questions")
     num_q = {}
     if(resp.status_code == 200):
@@ -157,6 +163,47 @@ def logs_events():
         logs = resp.json()
     print(logs)
     return logs
+
+@app.route("/stats", methods = ["GET"])
+def stats():
+    resp = requests.get("http://127.0.0.1:9000/stats")
+    stats = {}
+    if(resp.status_code == 200):
+        stats = resp.json()
+    print(stats)
+    return stats
+
+@app.route("/stats/views/<user>", methods = ['PUT', 'PATCH'])
+def num_views(user):
+    resp = requests.put("http://127.0.0.1:9000/stats/views/" + user)
+    num_v = {}
+    if(resp.status_code == 200):
+        num_v = resp.json()
+    return num_v
+
+@app.route("/stats/questions/<user>", methods = ['PUT', 'PATCH'])
+def num_questions_(user):
+    resp = requests.put("http://127.0.0.1:9000/stats/questions/" + user)
+    num_q = {}
+    if(resp.status_code == 200):
+        num_q = resp.json()
+    return num_q
+
+@app.route("/stats/answers/<user>", methods = ['PUT', 'PATCH'])
+def num_answers(user):
+    resp = requests.put("http://127.0.0.1:9000/stats/answers/" + user)
+    num_a = {}
+    if(resp.status_code == 200):
+        num_a = resp.json()
+    return num_a
+
+@app.route("/stats/videos_reg/<user>", methods = ['PUT', 'PATCH'])
+def num_videos_reg(user):
+    resp = requests.put("http://127.0.0.1:9000/stats/videos_reg/" + user)
+    num_v = {}
+    if(resp.status_code == 200):
+        num_v = resp.json()
+    return num_v
 
 @app.route("/")
 def index():
