@@ -68,6 +68,8 @@
                 "description": description,
                 'url': url
             }
+            console.log("i'm here")
+            console.log(requestData)
             $.ajax({
                 url: '/videos',
                 type: "POST",
@@ -76,7 +78,7 @@
                 data: JSON.stringify(requestData),
                 success: function(data) {
                     //TODO 5 after creating the video update the table
-                    console.log("resppnse for video creation" + data)
+                    console.log("response for video creation" + data)
                     console.log(data)
                     updateVideostable()
                 }
@@ -109,6 +111,11 @@
                 $("#playVideoID").val("")
                 window.location.href = "videoPage.html/" + videoID + "/" + n
             })
+
+            $("#buttonLogs").click(function() {
+                window.location.href = "logs/show"
+            })
+
         });
     </script>
 </head>
@@ -146,7 +153,11 @@
         <input type="text" placeholder="Video id" id="playVideoID">
     </div>
     <button class="btn btn-info" id="buttonPlayVideo">Play</button>
-
+</br>
+    <div id="Admin">
+        <button class="btn btn-primary" style="margin-top:25px;" id="buttonLogs">Logs</button>
+        <button class="btn btn-primary" style="margin-top:25px;" id="buttonStats">Statistics</button>
+    </div>
     </br>
     <button style="margin-bottom:25px; margin-top:25px;" class="btn btn-secondary" onclick="window.location='{{ url_for('logout') }}'">Logout</button>
 </body>

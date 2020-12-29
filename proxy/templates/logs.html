@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.css">
+    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-xmlrpc/0.4.3/jquery.xmlrpc.js">
+    </script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <link href="https://vjs.zencdn.net/7.8.4/video-js.css" rel="stylesheet" />
+    <script src="http://vjs.zencdn.net/7.8.4/video.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-youtube/2.6.1/Youtube.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <style>
+        body {
+            margin: 0 auto;
+            width: 95%;
+        }
+    </style>
+
+    <script>
+
+        function updateDataCreationtable() {
+            $.ajax({
+                url: '/logs/DataCreation',
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    console.log(data);
+                    $('#dataCreationTable > tbody:last-child').empty()
+                    data["DataCreation"].forEach(dc => {
+                        console.log(dc["video_id"] + " " + dc["description"])
+                        $('#dataCreationTable > tbody:last-child').
+                        append('<tr> <td>' + dc["timestamp"] + '</td><td>' + dc["data_type"] + '</td><td>' + dc["content"]+ ' </td><td>' + dc["user"] + '</td></tr>');
+                    });
+                }
+            });
+        }
+
+        function change_tbl(dhi) {
+            if (dhi == '') {
+                return;
+            }
+            $('#tbl_div > div').css('display', 'none');
+            $('#' + dhi).css('display', 'block');
+        }
+
+        $(document).ready(function() {
+            updateDataCreationtable()
+            
+        });
+    </script>
+</head>
+
+<body>
+    <h3>List of logs</h3>
+    <select onchange="change_tbl(this.value)">
+        <option value="">select table</option>
+        <option value="tb1">table 1</option>
+        <option value="tb2">table 2</option>
+    </select>
+    <div id="tbl_div" style="display:none">
+        <div id="tb1">
+            <table class="ui celled table selectable" id="dataCreationTable">
+                <thead>
+                    <tr>
+                        <th style="width: 15%">Timestamp</th>
+                        <th style="width: 15%">Data Type</th>
+                        <th style="width: 55%">Data Content</th>
+                        <th style="width: 15%">User</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div id="tb2">
+            <table class="ui celled table selectable" id="eventsTable">
+                <thead>
+                    <tr>
+                        <th style="width: 15%">Timestamp</th>
+                        <th style="width: 55%">IP</th>
+                        <th style="width: 15%">Endpoint</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

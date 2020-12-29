@@ -12,12 +12,12 @@ def logout():
     return redirect('http://127.0.0.1:7000/logout')
 
 
-@app.route("/API/videos/", methods=['GET'])
+@app.route("/videos/", methods=['GET'])
 def returnsVideosJSON():
     return {"videos": listVideosDICT()}
 
 
-@app.route("/API/videos/<int:id>/")
+@app.route("/videos/<int:id>", methods = ["GET"])
 def returnSingleVideoJSON(id):
     try:
         v = getVideoDICT(id)
@@ -25,30 +25,8 @@ def returnSingleVideoJSON(id):
     except:
         abort(404)
 
-
-@app.route("/API/videos/<json>", methods=['POST'])
-def createNewVideo(json):
-    sleep(0.1)
-    j = json
-    print (type(j))
-    if(getVideo(j["url"]) is None):
-        ret = False
-        try:
-            print(j["description"])
-            ret = newVideo(j["description"], j["url"])
-        except:
-            abort(400)
-            #the arguments were incorrect
-        if ret:
-            return {"id": ret}
-        else:
-            abort(409)
-    else:
-        print("Video already exists")
-    #if there is an erro return ERROR 409
-
-@app.route("/API/videos/", methods=['POST'])
-def sendQA():
+@app.route("/videos/", methods=['POST'])
+def createNewVideo():
     j = request.get_json()
     print (type(j))
     ret = False
@@ -64,14 +42,14 @@ def sendQA():
         abort(409)
 
 
-@app.route("/API/videos/<int:id>/views", methods=['PUT', 'PATCH'])
+@app.route("/videos/<int:id>/views", methods=['PUT', 'PATCH'])
 def newView(id):
     try:
         return {"id":id, "views": newVideoView(id)}
     except:
         abort(404)
 
-@app.route("/API/videos/<int:id>/questions", methods=['PUT', 'PATCH'])
+@app.route("/videos/<int:id>/questions", methods=['PUT', 'PATCH'])
 def newQSum(id):
     try:
         return {"id":id, "num_questions": newQuestionSum(id)}
