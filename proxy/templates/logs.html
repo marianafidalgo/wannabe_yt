@@ -72,17 +72,20 @@
             updateDataCreationtable()
             updateEventtable()
 
+            $("#buttonGoBack").click(function() {
+                window.history.back()
+            })
         });
     </script>
 </head>
 
 <body>
-    <h3>List of logs</h3>
-    <select id="table-select">
+    <h3 style="margin-top:15px;">List of logs</h3>
+    <select style="margin-top:15px;" class="form-control" id="table-select">
         <option value="tb1" selected>Data Creation Event Logs</option>
         <option value="tb2">Message Event Logs</option>
     </select>
-    <div id="tbl_div">
+    <div style="margin-top:25px;" id="tbl_div">
         <div id="tb1">
             <table class="ui celled table selectable" id="dataCreationTable">
                 <thead>
@@ -109,6 +112,9 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    <div>
+        <button style="margin-top:25px;" class="btn btn-secondary" id="buttonGoBack">Back</button>
     </div>
 </body>
 

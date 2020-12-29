@@ -44,12 +44,15 @@
         $(document).ready(function() {
             updateStatstable()
 
+            $("#buttonGoBack").click(function() {
+                window.history.back()
+            })
         });
     </script>
 </head>
 
 <body>
-    <h3>User statistics</h3>
+    <h3 style="margin-top:15px;">User statistics</h3>
 
     <table class="ui celled table selectable" id="statsTable">
         <thead>
@@ -64,6 +67,9 @@
         <tbody>
         </tbody>
     </table>
+    <div>
+        <button style="margin-top:25px;" class="btn btn-secondary" id="buttonGoBack">Back</button>
+    </div>
 
 </body>
 
