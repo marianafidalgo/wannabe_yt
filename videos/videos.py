@@ -6,17 +6,12 @@ from flask import render_template
 app = Flask(__name__)
 
 
-@app.route("/logout")
-def logout():
-    return redirect('http://127.0.0.1:7000/logout')
-
-
-@app.route("/videos/", methods=['GET'])
+@app.route("/videos", methods=['GET'])
 def returnsVideosJSON():
     return {"videos": listVideosDICT()}
 
 
-@app.route("/videos/<int:id>", methods = ["GET"])
+@app.route("/videos/<id>", methods = ["GET"])
 def returnSingleVideoJSON(id):
     try:
         v = getVideoDICT(id)
@@ -27,10 +22,8 @@ def returnSingleVideoJSON(id):
 @app.route("/videos", methods=['POST'])
 def createNewVideo():
     j = request.get_json()
-    print (type(j))
     ret = False
     try:
-        print(j["user"])
         ret = newVideo(j["user"],j["description"], j["url"])
     except:
         abort(400)

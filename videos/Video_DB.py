@@ -52,9 +52,6 @@ def listVideosDICT():
     lv = listVideos()
     for v in lv:
         vd = v.to_dictionary()
-        # del(vd["url"])
-        # del(vd["num_questions"])
-        # del(vd["views"])
         ret_list.append(vd)
     return ret_list
 
@@ -84,15 +81,16 @@ def newQuestionSum(id):
     return n
 
 def newVideo(user, description , url):
-    vid = YTVideo(user=user,description = description, url = url)
-    try:
-        session.add(vid)
-        session.commit()
-        v = vid.id
-        session.close()
-        return v
-    except:
-        return None
+    if(session.query(YTVideo).filter(YTVideo.url==url).scalar() is None):
+        vid = YTVideo(user=user,description = description, url = url)
+        try:
+            session.add(vid)
+            session.commit()
+            v = vid.id
+            session.close()
+            return v
+        except:
+            return None
 
 
 

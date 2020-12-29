@@ -65,7 +65,6 @@ def listDCDICT():
     for l in logs:
         ls = l.to_dictionary()
         ret_list.append(ls)
-    print(ret_list)
     return ret_list
 
 def newDC(data_type, content, timestamp, user):
@@ -90,7 +89,6 @@ def listEventsDICT():
     for l in logs:
         ls = l.to_dictionary()
         ret_list.append(ls)
-    print(ret_list)
     return ret_list
 
 def newEvent(timestamp, url):

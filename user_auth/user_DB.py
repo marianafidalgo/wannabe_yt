@@ -52,7 +52,7 @@ def listUsers():
 
 
 def getUser(user):
-     v =  session.query(Users).filter(Users.user==user).scalar()
+     v =  session.query(Users).filter(Users.user==user).all()
      session.close()
      return v
 
@@ -62,7 +62,14 @@ def listUsersDICT():
     for l in logs:
         ls = l.to_dictionary()
         ret_list.append(ls)
-    print(ret_list)
+    return ret_list
+
+def listUDICT(user):
+    ret_list = []
+    logs = getUser(user)
+    for l in logs:
+        ls = l.to_dictionary()
+        ret_list.append(ls)
     return ret_list
 
 def newUser(user, name, role):
@@ -105,7 +112,6 @@ def newVideoReg(user):
     b = session.query(Users).filter(Users.user==user).first()
     b.videos_reg+=1
     n = b.videos_reg
-    print(n)
     session.commit()
     session.close()
     return n

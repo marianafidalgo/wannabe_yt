@@ -28,6 +28,17 @@
         var n = '{{name}}'
         var id = '{{id}}'
 
+        // function that checks if the input in the url field is an url
+        function is_url(str) {
+            regexp = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+            if (regexp.test(str)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        // sends request to get the number of views and questions of a video
         function getVideoInfo(videoID) {
             $.ajax({
                 url: '/videos/' + videoID,
@@ -42,6 +53,7 @@
             })
         }
 
+        // sends request to get info of every video
         function updateVideostable() {
             $.ajax({
                 url: '/videos',
@@ -52,82 +64,90 @@
                     $('#videosTable > tbody:last-child').empty()
                     data["videos"].forEach(v => {
                         console.log(v["video_id"] + " " + v["description"])
+                            // fills the videos table
                         $('#videosTable > tbody:last-child').
                         append('<tr> <td>' + v["video_id"] + '</td><td>' + v["description"] + '</td><td id="nviews' + v["video_id"] + '">xxx</td><td id="nquestions' + v["video_id"] + '">0</td></tr>');
                         getVideoInfo(v["video_id"])
-
-                        // TODO  10 - Fill the column with the number of views of each video
                     });
                 }
             });
         }
 
+        // sends request to add a new video to the database
         function addNewVideo(url, description) {
-            // TODO 4 - create an object (requestData) that contains the url and descrition
-            // look at the server to understand what data should be sent.
-            let requestData = {
-                "user": id,
-                "description": description,
-                'url': url
-            }
-            console.log("i'm here")
-            console.log(requestData)
-            $.ajax({
-                url: '/videos',
-                type: "POST",
-                dataType: "json",
-                contentType: 'application/json',
-                data: JSON.stringify(requestData),
-                success: function(data) {
-                    //TODO 5 after creating the video update the table
-                    console.log("response for video creation" + data)
-                    console.log(data)
-                    updateVideostable()
+            val_url = is_url(url)
+                // check if url is valid
+            if (val_url == false)
+                alert("Please insert a valid url")
+            else {
+                let requestData = {
+                    "user": id,
+                    "description": description,
+                    'url': url
                 }
-            });
-
-            $.ajax({
-                url: '/stats/videos_reg/' + id,
-                type: "PUT",
-                dataType: "json",
-                success: function(data) {
-                    console.log(data)
-                }
-            });
-        }
-        $(document).ready(function() {
-
-            updateVideostable()
-            $("#buttonUpdateVideotable").click(
-                    //TODO 1 - configure the $("#buttonUpdateVideotable")
-                    // to update the table when clicked
-                    function() {
+                console.log("i'm here")
+                console.log(requestData)
+                $.ajax({
+                    url: '/videos',
+                    type: "POST",
+                    dataType: "json",
+                    contentType: 'application/json',
+                    data: JSON.stringify(requestData),
+                    success: function(data) {
+                        console.log("response for video creation" + data)
+                        console.log(data)
+                            // after creating the video updates the table
                         updateVideostable()
                     }
-                )
-                //TODO 2 - update the table when the page is loaded
+                });
+                // sends request to increment the number of registered videos
+                $.ajax({
+                    url: '/stats/videos_reg/' + id,
+                    type: "PUT",
+                    dataType: "json",
+                    success: function(data) {
+                        console.log(data)
+                    }
+                });
+            }
+        }
+
+        $(document).ready(function() {
+            // update the table when the page is loaded
+            updateVideostable()
+
+            $("#buttonUpdateVideotable").click(
+                function() {
+                    updateVideostable()
+                }
+            )
+
             $("#buttonAddVideo").click(function() {
+                // get the values of #newVideoURL and #newVideoDescription
+                // and pass those values to the addNewVideo function
                 newVideoURl = $("#newVideoURL").val()
                 newVideoDESC = $("#newVideoDescription").val()
                 document.getElementById("newVideoURL").value = ""
                 document.getElementById("newVideoDescription").value = ""
                 addNewVideo(newVideoURl, newVideoDESC)
-                    //TODO 3 - get the values of #newVideoURL and newVideoDescription
-                    // and pass those values to the addNewVideo function
+                    // update the table when a video is added
                 updateVideostable()
             })
 
             $("#buttonPlayVideo").click(function() {
+                // get video id value and pass it in the url to the next html page
                 videoID = $("#playVideoID").val()
                 $("#playVideoID").val("")
                 window.location.href = "videoPage.html/" + videoID + "/" + n
             })
 
             $("#buttonLogs").click(function() {
+                // go to logs html page
                 window.location.href = "logs/show"
             })
 
             $("#buttonStats").click(function() {
+                // go to stats html page
                 window.location.href = "stats"
             })
 
@@ -137,7 +157,12 @@
 
 <body>
     </br>
-    <h2>Welcome {{name}}</h2>
+    <div>
+        <h2>Welcome {{name}}</h2>
+        {% if role == "admin" %}
+        <button class="btn btn-primary" style="margin-top:25px;" id="buttonLogs">Logs</button>
+        <button class="btn btn-primary" style="margin-top:25px;" id="buttonStats">Users Statistics</button> {% endif %}
+    </div>
     </br>
     <h3>List of videos</h3>
     <table class="ui celled table selectable" id="videosTable">
@@ -169,10 +194,7 @@
     </div>
     <button class="btn btn-info" id="buttonPlayVideo">Play</button>
     </br>
-    <div id="Admin">
-        <button class="btn btn-primary" style="margin-top:25px;" id="buttonLogs">Logs</button>
-        <button class="btn btn-primary" style="margin-top:25px;" id="buttonStats">Users Statistics</button>
-    </div>
+
     </br>
     <button style="margin-bottom:25px; margin-top:25px;" class="btn btn-secondary" onclick="window.location='{{ url_for('logout') }}'">Logout</button>
 </body>

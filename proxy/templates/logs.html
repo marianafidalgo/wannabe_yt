@@ -25,6 +25,7 @@
     </style>
 
     <script>
+        // sends request to get info about data creation events
         function updateDataCreationtable() {
             $.ajax({
                 url: '/logs/DataCreation',
@@ -42,6 +43,7 @@
             });
         }
 
+        // sends request to get info about message exchange events
         function updateEventtable() {
             $.ajax({
                 url: '/logs/Events',
@@ -58,6 +60,7 @@
             });
         }
 
+        // change between tables
         jQuery(function() {
             $('#table-select').change(function() {
                 $('#tbl_div > div').css('display', 'none');
@@ -69,15 +72,19 @@
         })
 
         $(document).ready(function() {
+            // updates both tables
             updateDataCreationtable()
             updateEventtable()
 
+            // go back to previous page
             $("#buttonGoBack").click(function() {
                 window.history.back()
             })
         });
     </script>
 </head>
+
+{% if role == "admin" %}
 
 <body>
     <h3 style="margin-top:15px;">List of logs</h3>
@@ -116,7 +123,11 @@
     <div>
         <button style="margin-top:25px;" class="btn btn-secondary" id="buttonGoBack">Back</button>
     </div>
+    {% else %}
+    <h3 style="margin-top:15px;">Only administrators can view this information</h3>
+    {% endif %}
 </body>
+
 
 </html>
 

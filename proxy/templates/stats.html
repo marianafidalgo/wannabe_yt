@@ -25,6 +25,7 @@
     </style>
 
     <script>
+        // sends request to get every users stats info
         function updateStatstable() {
             $.ajax({
                 url: '/stats',
@@ -42,8 +43,10 @@
         }
 
         $(document).ready(function() {
+            // updates statistics table
             updateStatstable()
 
+            // goes back to previous page
             $("#buttonGoBack").click(function() {
                 window.history.back()
             })
@@ -52,6 +55,7 @@
 </head>
 
 <body>
+    {% if role == "admin" %}
     <h3 style="margin-top:15px;">User statistics</h3>
 
     <table class="ui celled table selectable" id="statsTable">
@@ -70,6 +74,10 @@
     <div>
         <button style="margin-top:25px;" class="btn btn-secondary" id="buttonGoBack">Back</button>
     </div>
+
+    {% else %}
+    <h3 style="margin-top:15px;">Only administrators can view this information</h3>
+    {% endif %}
 
 </body>
 

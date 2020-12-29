@@ -36,9 +36,8 @@
         var user = '{{user}}'
         var name = '{{name}}'
 
+        // sends request to add a new question to the database
         function addNewQuestion(time, question) {
-            // TODO 4 - create an object (requestData) that contains the url and descrition
-            // look at the server to understand what data should be sent.
             let requestData = {
                 "video_id": id,
                 "user": user,
@@ -53,7 +52,6 @@
                 contentType: 'application/json',
                 data: JSON.stringify(requestData),
                 success: function(data) {
-                    //TODO 5 after creating the video update the table
                     console.log("response for question creation" + data)
                     console.log(data)
                     updateQuestiontable()
@@ -61,9 +59,8 @@
             });
         }
 
+        // sends request to add a new answer to the database
         function addNewAnswer(user, name, answer, question) {
-            // TODO 4 - create an object (requestData) that contains the url and descrition
-            // look at the server to understand what data should be sent.
             let requestData = {
                 "user": user,
                 "name": name,
@@ -77,13 +74,12 @@
                 contentType: 'application/json',
                 data: JSON.stringify(requestData),
                 success: function(data) {
-                    //TODO 5 after creating the video update the table
                     console.log("response for answer creation" + data)
                     console.log(data.question)
                     updateAnswerstable(data.question)
                 }
             });
-
+            // sends request to increment the number of answers posted by a specific user
             $.ajax({
                 url: '/stats/answers/' + user,
                 type: "PUT",
@@ -94,6 +90,7 @@
             });
         }
 
+        // sends request to get info about every question of a specific video
         function updateQuestiontable() {
             $.ajax({
                 url: '/QA/' + id,
@@ -111,6 +108,7 @@
             });
         }
 
+        // sends request to get info about every answer of a specific question
         function updateAnswerstable(question_id) {
             $.ajax({
                 url: '/Answers/' + question_id,
@@ -131,9 +129,10 @@
 
         $(document).ready(function() {
             var vPlayer = videojs('videoPlayer');
+            // update the questions table when the page is loaded
             var n_ques = updateQuestiontable()
+                // increase the number of views
             $.ajax({
-                //TODO 9 - increase the number of views
                 url: '/videos/' + id + "/views",
                 type: "PUT",
                 dataType: "json",
@@ -141,7 +140,6 @@
                     console.log(data)
                 }
             });
-
             $.ajax({
                 url: '/stats/views/' + user,
                 type: "PUT",
@@ -151,20 +149,20 @@
                 }
             });
 
+            // pause video
             $("#buttonVideoPause").click(function() {
-                vPlayer.pause()
-                var pauseTime = vPlayer.currentTime()
-                $("#resumetime").val(pauseTime)
+                    vPlayer.pause()
+                    var pauseTime = vPlayer.currentTime()
+                    $("#resumetime").val(pauseTime)
 
-            })
+                })
+                // resume video
             $("#buttonVideoResume").click(function() {
                     vPlayer.currentTime(parseFloat($("#resumetime").val()))
                     vPlayer.play()
                 })
-                //TODO 6 - get the value of #playVideoID
+                // sends request to get the video info (url and description)
             $.ajax({
-                //TODO 7 - retrieve the corresponding URL by
-                //        calling the /videos/<id>/ REST endpoint)
                 url: '/videos/' + id,
                 type: "GET",
                 dataType: "json",
@@ -173,7 +171,7 @@
                     url = data["url"]
                     $("#desc").html("Playing: " + data["description"]);
                     console.log(url)
-                        //TODO 8 - update the player with the url retrieved
+                        // update the player with the url retrieved
                     vPlayer.src({
                         "type": "video/youtube",
                         "src": url
@@ -182,41 +180,43 @@
                 }
             });
 
-            // TODO 11 - update the table
+            // adds new question
             $("#buttonAddQuestion").click(function() {
-                    newTime = $("#newTime").val()
-                    newQuestion = $("#newQuestion").val()
-                    document.getElementById("newTime").value = ""
-                    document.getElementById("newQuestion").value = ""
-                    addNewQuestion(newTime, newQuestion)
-                        //TODO 3 - get the values of #newVideoURL and newVideoDescription
-                        // and pass those values to the addNewVideo function
-                    vPlayer.currentTime(parseFloat($("#resumetime").val()))
-                    vPlayer.play()
-                    document.getElementById("newQ").style.display = "none";
+                // get the  timestamp and question values and pass those values to the addNewVideo function
+                newTime = $("#newTime").val()
+                newQuestion = $("#newQuestion").val()
+                document.getElementById("newTime").value = ""
+                document.getElementById("newQuestion").value = ""
+                addNewQuestion(newTime, newQuestion)
+                    // resume video
+                vPlayer.currentTime(parseFloat($("#resumetime").val()))
+                vPlayer.play()
+                document.getElementById("newQ").style.display = "none";
 
-                    $.ajax({
-                        //TODO 9 - increase the number of views
-                        url: '/videos/' + id + '/questions',
-                        type: "PUT",
-                        dataType: "json",
-                        success: function(data) {
-                            console.log("PUUUT")
-                            console.log(data)
-                        }
-                    });
+                // sends request to increment number of questions
+                $.ajax({
+                    url: '/videos/' + id + '/questions',
+                    type: "PUT",
+                    dataType: "json",
+                    success: function(data) {
+                        console.log("PUUUT")
+                        console.log(data)
+                    }
+                });
 
-                    $.ajax({
-                        url: '/stats/questions/' + user,
-                        type: "PUT",
-                        dataType: "json",
-                        success: function(data) {
-                            console.log(data)
-                        }
-                    });
-                })
-                // TODO 11 - update the table
+                $.ajax({
+                    url: '/stats/questions/' + user,
+                    type: "PUT",
+                    dataType: "json",
+                    success: function(data) {
+                        console.log(data)
+                    }
+                });
+            })
+
+            // adds new answer
             $("#buttonAddAnswer").click(function() {
+                // get the answer and pass it to the addNewAnswer function
                 newAnswer = $("#newAnswer").val()
                 question = $('input[name=radioQ]:checked').val()
                 document.getElementById("newAnswer").value = ""
@@ -224,19 +224,23 @@
                 console.log(name)
                 console.log(newAnswer)
                 console.log(question)
+                    // check if there is a question selected
                 if (question > 0) {
                     addNewAnswer(user, name, newAnswer, question)
                 } else
                     alert("Please choose a question to answer")
-                    //TODO 3 - get the values of #newVideoURL and newVideoDescription
-                    // and pass those values to the addNewVideo function
             })
+
+            // shows answer table
             $("#buttonSeeAnswers").click(function() {
+                // gets the id of the question that is selected and the answers to that question
                 question_id = $('input[name=radioQ]:checked').val()
                 console.log(question_id)
                 updateAnswerstable(question_id)
+                    // show answers table
                 document.getElementById("ListA").style.display = "block";
                 document.getElementById("ListA").style.marginTop = "25px";
+                // sends request to get question info for display
                 $.ajax({
                     url: '/QA/' + id + '/' + question_id,
                     type: "GET",
@@ -252,6 +256,7 @@
                 })
             })
 
+            // show text boxes to add new question
             $("#buttonNewQuestion").click(function() {
                 document.getElementById("newQ").style.display = "block";
                 document.getElementById("newQ").style.marginTop = "5px";
@@ -262,6 +267,7 @@
                 document.getElementById("newTime").value = pauseTime;
             })
 
+            // go back to previous page
             $("#buttonGoBack").click(function() {
                 window.history.back()
             })

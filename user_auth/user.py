@@ -40,11 +40,8 @@ app.register_blueprint(fenix_blueprint)
 @app.route('/')
 def home_page():
     # The access token is generated everytime the user authenticates into FENIX
-    # print(fenix_blueprint.session.authorized)
-    # print("Access token: "+ str(fenix_blueprint.session.access_token))
-    # return render_template("appPage.html", loggedIn = fenix_blueprint.session.authorized)
     if fenix_blueprint.session.authorized == False:
-        #if not logged in browser is redirected to login page (in this case FENIX handled the login)
+        #if not logged in browser is redirected to login page
         return redirect(url_for('fenix-example.login'))
     else:
         #if the user is authenticated then a request to FENIX is made
@@ -52,23 +49,17 @@ def home_page():
         #resp contains the response made to /api/fenix/vi/person (information about current user)
         data = resp.json()
         #send to DB
-        print("hey bd")
-        print(getUser(data["username"]))
         if(getUser(data["username"]) is None):
             ret = False
             try:
                 if(data["username"] == "ist187077" or data["username"] == "ist187074"):
-                    print("Hello admin")
                     ret = newUser(data["username"],data["name"], "admin")
                 else:
-                    print("Hello user")
                     ret = newUser(data["username"],data["name"], "user")
             except:
                 abort(400)
         #send to proxy!!!
-        #return redirect(url_for('user', id =data['username'], name=data['name']))
         url = "http://127.0.0.1:4000/logged_In/"+ data['username']+'/'+data['name']
-        print(url)
         return redirect(url)
 
 
@@ -76,50 +67,15 @@ def home_page():
 def user(id, name):
     paras = json.dumps({"id":id,"name":name})
     response = requests.post('http://127.0.0.1:4000/user_proxy',data=paras)
-    print(response.status_code)
     if(response.status_code == 200 ):
         return redirect('http://127.0.0.1:4000/u_VQA')
     else:
         return "Error"
 
-
-
 @app.route('/logout')
 def logout():
-    # this clears all server information about the access token of this connection
-    res = str(session.items())
-    print(res)
-    session.clear()
-    res = str(session.items())
-    print(res)
-    # when the browser is redirected to home page it is not logged in anymore
+    del fenix_blueprint.token
     return redirect("http://127.0.0.1:4000/")
-
-
-# @app.route('/private')
-# def private_page():
-#     #this page can only be accessed by a authenticated user
-
-#     # verification of the user is  logged in
-#     if fenix_blueprint.session.authorized == False:
-#         #if not logged in browser is redirected to login page (in this case FENIX handled the login)
-#         return redirect(url_for("fenix-example.login"))
-#     else:
-#         #if the user is authenticated then a request to FENIX is made
-#         resp = fenix_blueprint.session.get("/api/fenix/v1/person/")
-#         #resp contains the response made to /api/fenix/vi/person (information about current user)
-#         data = resp.json()
-#         print(resp.json())
-#         return render_template("privPage.html", username=data['username'], name=data['name'])
-
-# @app.route("/stats/user/<user>", methods=['POST'])
-# def newU(user):
-#     ret = False
-#     try:
-#         ret = newUser(user)
-#     except:
-#         abort(400)
-#         #the arguments were incorrect
 
 @app.route("/stats/views/<user>", methods=['PUT', 'PATCH'])
 def newV(user):
@@ -144,17 +100,18 @@ def newA(user):
 
 @app.route("/stats/videos_reg/<user>", methods=['PUT', 'PATCH'])
 def newVideo(user):
-    print("olaaa")
-    print(user)
     try:
         return {"user":user, "videos_reg": newVideoReg(user)}
     except:
         abort(404)
 
+@app.route("/role/<id>", methods=['GET'])
+def returnRole(id):
+    return {"User": listUDICT(id)}
+
 
 @app.route("/stats", methods=['GET'])
 def returnsStats():
-    print(listUsersDICT())
     return {"Users": listUsersDICT()}
 
 
