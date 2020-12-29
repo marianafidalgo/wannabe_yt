@@ -56,16 +56,13 @@
     {% if loggedIn %} username - {{ username }} {{name}}
 
     <button id="button" onclick="window.location='{{ url_for('logout') }}'">
-  Logout
-</button> {% else %}
-
+        Logout
+    </button> {% else %}
+    
     <div class="bg">
-
         <button id="button" onclick="window.location='{{ url_for('login') }}'">
-    Login
-  </button>
-
-
+            Login
+        </button>
     </div>
 
     {% endif %}

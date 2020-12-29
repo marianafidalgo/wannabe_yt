@@ -3,12 +3,27 @@ from flask import Flask, abort, request, redirect, jsonify
 import json
 from flask import render_template
 import requests
+from datetime import datetime
 
 app = Flask(__name__)
 
 user_id = ''
 user_name = ''
 
+@app.before_request
+def log_request_info():
+    method = request.method
+    print("before request")
+    print(method)
+    if(method == 'POST'):
+        data_type = request.content_type
+        content = request.get_json()
+        print(content)
+        print(content["name"])
+        timestamp = str(datetime.now())
+        user = content["name"]
+        data = {"data_type": data_type, "content": content, "timestamp": timestamp, "user": user}
+        requests.post("http://127.0.0.1:6000/logs", json = data)
 
 @app.route("/login")
 def login():
@@ -21,8 +36,13 @@ def logout():
     url = "http://127.0.0.1:4000/"
     return redirect(url)
 
+@app.route("/logged_In/<id>/logs/show", methods = ["GET"])
+def go_to_logs(id):
+    return render_template("logs.html")
+
 @app.route("/logged_In/<id>/<name>", methods = ["GET"])
 def logged_In(id, name):
+    user_name = name
     return render_template("videoListing.html", id = id, name = name)
 
 @app.route("/logged_In/<user>/videoPage.html/<id>/<name>", methods = ["GET"])
@@ -31,7 +51,7 @@ def logged_In_vid(user, id, name):
 
 @app.route("/videos", methods = ["GET"])
 def videos():
-    resp = requests.get("http://127.0.0.1:8000/API/videos/")
+    resp = requests.get("http://127.0.0.1:8000/videos/")
     videos = {}
     if(resp.status_code == 200):
         videos = resp.json()
@@ -40,14 +60,14 @@ def videos():
 @app.route("/videos", methods = ["POST"])
 def new_video():
     j = request.get_json()
-    resp = requests.post("http://127.0.0.1:8000/API/videos/", json = j)
+    resp = requests.post("http://127.0.0.1:8000/videos/", json = j)
     if(resp.status_code == 200):
         print(j)
     return j
 
 @app.route("/videos/<id>/", methods = ["GET"])
 def video(id):
-    resp = requests.get("http://127.0.0.1:8000/API/videos/" + id)
+    resp = requests.get("http://127.0.0.1:8000/videos/" + id)
     video = {}
     if(resp.status_code == 200):
         video = resp.json()
@@ -55,7 +75,7 @@ def video(id):
 
 @app.route("/videos/<id>/views", methods = ['PUT', 'PATCH'])
 def video_views(id):
-    resp = requests.put("http://127.0.0.1:8000/API/videos/" + id + "/views")
+    resp = requests.put("http://127.0.0.1:8000/videos/" + id + "/views")
     video = {}
     if(resp.status_code == 200):
         video = resp.json()
@@ -63,7 +83,7 @@ def video_views(id):
 
 @app.route("/videos/<id>/questions", methods = ['PUT', 'PATCH'])
 def num_questions(id):
-    resp = requests.put("http://127.0.0.1:8000/API/videos/" + id + "/questions")
+    resp = requests.put("http://127.0.0.1:8000/videos/" + id + "/questions")
     num_q = {}
     if(resp.status_code == 200):
         num_q = resp.json()
@@ -114,6 +134,15 @@ def answers_qid(id):
         answers = resp.json()
     print(answers)
     return answers
+
+@app.route("/logs/DataCreation", methods = ["GET"])
+def logs():
+    resp = requests.get("http://127.0.0.1:6000/logs/DataCreation")
+    logs = {}
+    if(resp.status_code == 200):
+        logs = resp.json()
+    print(logs)
+    return logs
 
 @app.route("/")
 def index():
