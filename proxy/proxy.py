@@ -15,7 +15,7 @@ def log_request_info():
         content = request.get_json()
         timestamp = str(datetime.now())
         data = {"data_type": data_type, "content": content, "timestamp": timestamp, "user": content["user"]}
-        requests.post("http://127.0.0.1:6000/logs/DC", json = data)
+        requests.post("http://127.0.0.1:6000/logs/DataCreation", json = data)
     else:
         timestamp = str(datetime.now())
         url = request.url

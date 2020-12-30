@@ -17,15 +17,6 @@ def returnsQuestionJSON(id, q_id):
 def returnsAJSON(id):
     return {"Answers": listAnswersDICT(id)}
 
-@app.route("/API/videos/<int:id>/")
-def returnSingleQJSON(id):
-    try:
-        v = getQDICT(id)
-        return v
-    except:
-        abort(404)
-
-
 @app.route("/QA", methods=['POST'])
 def createQuestion():
     sleep(0.1)

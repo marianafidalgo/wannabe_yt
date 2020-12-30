@@ -5,7 +5,7 @@ import json
 from time import sleep
 app = Flask(__name__)
 
-@app.route("/logs/DC", methods=['POST'])
+@app.route("/logs/DataCreation", methods=['POST'])
 def createDC():
     sleep(0.1)
     j = request.get_json()
