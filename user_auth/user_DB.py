@@ -52,7 +52,7 @@ def listUsers():
 
 
 def getUser(user):
-     v =  session.query(Users).filter(Users.user==user).all()
+     v = session.query(Users).filter(Users.user==user).first()
      session.close()
      return v
 
@@ -65,11 +65,9 @@ def listUsersDICT():
     return ret_list
 
 def listUDICT(user):
-    ret_list = []
+    ret_list = {}
     logs = getUser(user)
-    for l in logs:
-        ls = l.to_dictionary()
-        ret_list.append(ls)
+    ret_list = logs.to_dictionary()
     return ret_list
 
 def newUser(user, name, role):

@@ -82,7 +82,7 @@ def logged_In(id, name):
     user = {}
     if(resp.status_code == 200):
         user = resp.json()
-    return render_template("videoListing.html", id = id, name = name, role = user["User"][0]["role"])
+    return render_template("videoListing.html", id = id, name = name, role = user["User"]["role"])
 
 @app.route("/logged_In/<user>/videoPage.html/<id>/<name>", methods = ["GET"])
 def logged_In_vid(user, id, name):
@@ -164,6 +164,7 @@ def question(v_id, q_id):
     question = {}
     if(resp.status_code == 200):
         question = resp.json()
+    print(question)
     return question
 
 @app.route("/Answers", methods = ["POST"])

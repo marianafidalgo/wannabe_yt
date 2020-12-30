@@ -72,16 +72,13 @@ def listQADICT(id):
     return ret_list
 
 def listQuestion(id, q_id):
-    return session.query(QA).filter(QA.video_id==id, QA.id==q_id)
+    return session.query(QA).filter(QA.video_id==id, QA.id==q_id).first()
     session.close()
 
 def listQuestionDICT(id, q_id):
-    ret_list = []
+    ret_list = {}
     lqa = listQuestion(id, q_id)
-    for q in lqa:
-        qa = q.to_dictionary()
-        ret_list.append(qa)
-    print(ret_list)
+    ret_list = lqa.to_dictionary()
     return ret_list
 
 def getQuestion(id):

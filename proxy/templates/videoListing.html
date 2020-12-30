@@ -150,18 +150,25 @@
                 // go to stats html page
                 window.location.href = "stats"
             })
-
         });
     </script>
 </head>
 
 <body>
+    <div class="topnav">
+        <a class="active" href="#home">Home</a>
+        {% if role == "admin" %}
+        <a href="#news">Logs Register</a>
+        <a href="#contact">User Statistics</a>
+        {% endif %}
+        <a href="#about">Logout</a>
+      </div>
     </br>
     <div>
         <h2>Welcome {{name}}</h2>
-        {% if role == "admin" %}
+        <!-- {% if role == "admin" %}
         <button class="btn btn-primary" style="margin-top:25px;" id="buttonLogs">Logs</button>
-        <button class="btn btn-primary" style="margin-top:25px;" id="buttonStats">Users Statistics</button> {% endif %}
+        <button class="btn btn-primary" style="margin-top:25px;" id="buttonStats">Users Statistics</button> {% endif %} -->
     </div>
     </br>
     <h3>List of videos</h3>
