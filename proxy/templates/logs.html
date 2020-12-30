@@ -80,6 +80,11 @@
             $("#buttonGoBack").click(function() {
                 window.history.back()
             })
+
+            $("#home").click(function() {
+                // go to stats html page
+                window.location.assign("http://127.0.0.1:4000/logged_In/" + id + "/" + user)
+            })
         });
     </script>
 </head>

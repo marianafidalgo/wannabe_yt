@@ -22,6 +22,34 @@
             margin: 0 auto;
             width: 95%;
         }
+
+        /* Add a black background color to the top navigation */
+        .topnav {
+            background-color: rgb(248, 241, 241);
+            overflow: hidden;
+        }
+
+        /* Style the links inside the navigation bar */
+        .topnav a {
+            float: left;
+            color: #a39393;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+        }
+
+        /* Change the color of links on hover */
+        .topnav a:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            color: rgb(34, 33, 33);
+        }
+
+        /* Add a color to the active/current link */
+        .topnav a.active {
+            background-color: #5bc0de;
+            color: white;
+        }
     </style>
 
     <script>
@@ -152,23 +180,21 @@
             })
         });
     </script>
+    <div style = "width:100%" class="topnav">
+        <a class="active">Home</a>
+        {% if role == "admin" %}
+        <a id="buttonLogs">Logs Register</a>
+        <a id="buttonStats">User Statistics</a>
+        {% endif %}
+        <a style="float:right" onclick="window.location='{{ url_for('logout') }}'">Logout</a>
+    </div>
 </head>
 
 <body>
-    <div class="topnav">
-        <a class="active" href="#home">Home</a>
-        {% if role == "admin" %}
-        <a href="#news">Logs Register</a>
-        <a href="#contact">User Statistics</a>
-        {% endif %}
-        <a href="#about">Logout</a>
-      </div>
+    
     </br>
     <div>
         <h2>Welcome {{name}}</h2>
-        <!-- {% if role == "admin" %}
-        <button class="btn btn-primary" style="margin-top:25px;" id="buttonLogs">Logs</button>
-        <button class="btn btn-primary" style="margin-top:25px;" id="buttonStats">Users Statistics</button> {% endif %} -->
     </div>
     </br>
     <h3>List of videos</h3>
@@ -196,14 +222,13 @@
     <button class="btn btn-info" id="buttonAddVideo">Add new Video</button>
 
     <h3>Play Video</h3>
-    <div class="ui input">
+    <div  style="margin-bottom:25px;" class="ui input">
         <input type="text" placeholder="Video id" id="playVideoID">
+    
+        <button style="margin-left:5px;" class="btn btn-info" id="buttonPlayVideo">Play</button>
     </div>
-    <button class="btn btn-info" id="buttonPlayVideo">Play</button>
     </br>
 
-    </br>
-    <button style="margin-bottom:25px; margin-top:25px;" class="btn btn-secondary" onclick="window.location='{{ url_for('logout') }}'">Logout</button>
 </body>
 
 </html>

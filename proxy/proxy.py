@@ -94,7 +94,7 @@ def go_to_logs(id):
     user = {}
     if(resp.status_code == 200):
         user = resp.json()
-    return render_template("logs.html", role = user["User"][0]["role"])
+    return render_template("logs.html", role = user["User"]["role"])
 
 @app.route("/logged_In/<id>/stats", methods = ["GET"])
 def go_to_stats(id):
@@ -102,7 +102,7 @@ def go_to_stats(id):
     user = {}
     if(resp.status_code == 200):
         user = resp.json()
-    return render_template("stats.html", role = user["User"][0]["role"])
+    return render_template("stats.html", role = user["User"]["role"])
 
 @app.route("/videos", methods = ["GET"])
 def videos():
