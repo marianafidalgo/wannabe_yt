@@ -59,6 +59,7 @@ def home_page():
             except:
                 abort(400)
         #send to proxy!!!
+        print("hereeeeeeeee|||")
         url = "http://127.0.0.1:4000/logged_In/"+ data['username']+'/'+data['name']
         return redirect(url)
 
