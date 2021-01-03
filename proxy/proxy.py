@@ -4,6 +4,7 @@ import json
 from flask import render_template
 import requests
 from datetime import datetime
+import urllib.request
 
 app = Flask(__name__)
 
@@ -27,176 +28,299 @@ def log_request_info():
 @app.route("/login")
 def login():
     url = "http://127.0.0.1:5000"
-    return redirect(url)
+    try:
+        code = urllib.request.urlopen(url).getcode()
+        if code == 200:
+            print('Web site exists')
+            return redirect(url)
+    except:
+        print('Web site does not exist')
+        return "fail"
+
 
 @app.route('/logout')
 def logout():
     url = "http://127.0.0.1:5000/logout"
-    return redirect(url)
+    try:
+        code = urllib.request.urlopen(url).getcode()
+        if code == 200:
+            print('Web site exists')
+            return redirect(url)
+    except:
+        print('Web site does not exist')
+        return "fail"
 
 @app.route("/stats", methods = ["GET"])
 def stats():
-    resp = requests.get("http://127.0.0.1:5000/stats")
-    stats = {}
-    if(resp.status_code == 200):
-        stats = resp.json()
-    return stats
+    try:
+        resp = requests.get("http://127.0.0.1:5000/stats")
+        stats = {}
+        if(resp.status_code == 200):
+            stats = resp.json()
+            return stats
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 @app.route("/stats/views/<user>", methods = ['PUT', 'PATCH'])
 def num_views(user):
-    resp = requests.put("http://127.0.0.1:5000/stats/views/" + user)
-    num_v = {}
-    if(resp.status_code == 200):
-        num_v = resp.json()
-    return num_v
+    try:
+        resp = requests.put("http://127.0.0.1:5000/stats/views/" + user)
+        num_v = {}
+        if(resp.status_code == 200):
+            num_v = resp.json()
+            return num_v
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 @app.route("/stats/questions/<user>", methods = ['PUT', 'PATCH'])
 def num_questions_(user):
-    resp = requests.put("http://127.0.0.1:5000/stats/questions/" + user)
-    num_q = {}
-    if(resp.status_code == 200):
-        num_q = resp.json()
-    return num_q
+    try:
+        resp = requests.put("http://127.0.0.1:5000/stats/questions/" + user)
+        num_q = {}
+        if(resp.status_code == 200):
+            num_q = resp.json()
+            return num_q
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 @app.route("/stats/answers/<user>", methods = ['PUT', 'PATCH'])
 def num_answers(user):
-    resp = requests.put("http://127.0.0.1:5000/stats/answers/" + user)
-    num_a = {}
-    if(resp.status_code == 200):
-        num_a = resp.json()
-    return num_a
+    try:
+        resp = requests.put("http://127.0.0.1:5000/stats/answers/" + user)
+        num_a = {}
+        if(resp.status_code == 200):
+            num_a = resp.json()
+            return num_a
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 @app.route("/stats/videos_reg/<user>", methods = ['PUT', 'PATCH'])
 def num_videos_reg(user):
-    resp = requests.put("http://127.0.0.1:5000/stats/videos_reg/" + user)
-    num_vd = {}
-    if(resp.status_code == 200):
-        num_vd = resp.json()
-    return num_vd
+    try:
+        resp = requests.put("http://127.0.0.1:5000/stats/videos_reg/" + user)
+        num_vd = {}
+        if(resp.status_code == 200):
+            num_vd = resp.json()
+            return num_vd
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 # VIDEOS process
 
 @app.route("/logged_In/<id>/<name>", methods = ["GET"])
 def logged_In(id, name):
-    resp = requests.get("http://127.0.0.1:5000/role/"+ id)
-    user = {}
-    if(resp.status_code == 200):
-        user = resp.json()
-    return render_template("videoListing.html", id = id, name = name, role = user["User"][0]["role"])
+    try:
+        resp = requests.get("http://127.0.0.1:5000/role/"+ id)
+        user = {}
+        if(resp.status_code == 200):
+            user = resp.json()
+            return render_template("videoListing.html", id = id, name = name, role = user["User"][0]["role"])
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
-@app.route("/logged_In/<user>/videoPage.html/<id>/<name>", methods = ["GET"])
+@app.route("/logged_In/<user>/videoPage.html/<id>/<name>")
 def logged_In_vid(user, id, name):
-    return render_template("videoPage.html", user = user, name = name, id = id)
+     try:
+        return render_template("videoPage.html", user = user, name = name, id = id)
+    except:
+        print('Web site does not exist')
+        return "fail"
 
 @app.route("/logged_In/<id>/logs/show", methods = ["GET"])
 def go_to_logs(id):
-    resp = requests.get("http://127.0.0.1:5000/role/"+ id)
-    user = {}
-    if(resp.status_code == 200):
-        user = resp.json()
-    return render_template("logs.html", role = user["User"][0]["role"])
+    try:
+        resp = requests.get("http://127.0.0.1:5000/role/"+ id)
+        user = {}
+        if(resp.status_code == 200):
+            user = resp.json()
+            return render_template("logs.html", role = user["User"][0]["role"])
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 @app.route("/logged_In/<id>/stats", methods = ["GET"])
 def go_to_stats(id):
-    resp = requests.get("http://127.0.0.1:5000/role/"+ id)
-    user = {}
-    if(resp.status_code == 200):
-        user = resp.json()
-    return render_template("stats.html", role = user["User"][0]["role"])
+    try:
+        resp = requests.get("http://127.0.0.1:5000/role/"+ id)
+        user = {}
+        if(resp.status_code == 200):
+            user = resp.json()
+            return render_template("stats.html", role = user["User"][0]["role"])
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 @app.route("/videos", methods = ["GET"])
 def videos():
-    resp = requests.get("http://127.0.0.1:8000/videos")
-    videos = {}
-    if(resp.status_code == 200):
-        videos = resp.json()
-    return videos
+    try:
+        resp = requests.get("http://127.0.0.1:8000/videos")
+        videos = {}
+        if(resp.status_code == 200):
+            videos = resp.json()
+            return videos
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 @app.route("/videos", methods = ["POST"])
 def new_video():
-    j = request.get_json()
-    resp = requests.post("http://127.0.0.1:8000/videos", json = j)
-    return str(resp.status_code)
+    try:
+        j = request.get_json()
+        resp = requests.post("http://127.0.0.1:8000/videos", json = j)
+        if(resp.status_code == 200):
+            videos = resp.json()
+            return str(resp.status_code)
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 @app.route("/videos/<id>", methods = ["GET"])
 def video(id):
-    resp = requests.get("http://127.0.0.1:8000/videos/" + id)
-    video = {}
-    if(resp.status_code == 200):
-        video = resp.json()
-    return video
+    try:
+        resp = requests.get("http://127.0.0.1:8000/videos/" + id)
+        video = {}
+        if(resp.status_code == 200):
+            video = resp.json()
+            return video
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 @app.route("/videos/<id>/views", methods = ['PUT', 'PATCH'])
 def video_views(id):
-    resp = requests.put("http://127.0.0.1:8000/videos/" + id + "/views")
-    num_vw = {}
-    if(resp.status_code == 200):
-        num_vw = resp.json()
-    return num_vw
+    try:
+        resp = requests.put("http://127.0.0.1:8000/videos/" + id + "/views")
+        num_vw = {}
+        if(resp.status_code == 200):
+            num_vw = resp.json()
+            return num_vw
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 @app.route("/videos/<id>/questions", methods = ['PUT', 'PATCH'])
 def num_questions(id,):
-    resp = requests.put("http://127.0.0.1:8000/videos/" + id + "/questions")
-    num_q = {}
-    if(resp.status_code == 200):
-        num_q = resp.json()
-    return num_q
+    try:
+        resp = requests.put("http://127.0.0.1:8000/videos/" + id + "/questions")
+        num_q = {}
+        if(resp.status_code == 200):
+            num_q = resp.json()
+            return num_q
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 # QA process
 
 @app.route("/QA", methods = ["POST"])
 def new_question():
-    j = request.get_json()
-    resp = requests.post("http://127.0.0.1:7000/QA", json = j)
-    return str(resp.status_code)
+    try:
+        j = request.get_json()
+        resp = requests.post("http://127.0.0.1:7000/QA", json = j)
+        if(resp.status_code == 200):
+            return str(resp.status_code)
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 @app.route("/QA/<v_id>", methods = ["GET"])
 def questions(v_id):
-    resp = requests.get("http://127.0.0.1:7000/QA/"+ v_id)
-    questions = {}
-    if(resp.status_code == 200):
-        questions = resp.json()
-    return questions
+    try:
+        resp = requests.get("http://127.0.0.1:7000/QA/"+ v_id)
+        questions = {}
+        if(resp.status_code == 200):
+            questions = resp.json()
+            return questions
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 @app.route("/QA/<v_id>/<q_id>", methods = ["GET"])
 def question(v_id, q_id):
-    resp = requests.get("http://127.0.0.1:7000/QA/"+ v_id + '/' + q_id)
-    question = {}
-    if(resp.status_code == 200):
-        question = resp.json()
-    return question
+    try:
+        resp = requests.get("http://127.0.0.1:7000/QA/"+ v_id + '/' + q_id)
+        question = {}
+        if(resp.status_code == 200):
+            question = resp.json()
+            return question
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 @app.route("/Answers", methods = ["POST"])
 def new_answer():
-    j = request.get_json()
-    resp = requests.post("http://127.0.0.1:7000/Answers", json = j)
-    return str(resp.status_code)
+    try:
+        j = request.get_json()
+        resp = requests.post("http://127.0.0.1:7000/Answers", json = j)
+        if(resp.status_code == 200):
+            return str(resp.status_code)
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 @app.route("/Answers/<id>", methods = ["GET"])
 def answers_qid(id):
-    resp = requests.get("http://127.0.0.1:7000/Answers/" + id)
-    answers = {}
-    if(resp.status_code == 200):
-        answers = resp.json()
-    return answers
+    try:
+        resp = requests.get("http://127.0.0.1:7000/Answers/" + id)
+        answers = {}
+        if(resp.status_code == 200):
+            answers = resp.json()
+            return answers
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 # LOGS process
 
 @app.route("/logs/DataCreation", methods = ["GET"])
 def logs_dc():
-    resp = requests.get("http://127.0.0.1:6000/logs/DataCreation")
-    logs = {}
-    if(resp.status_code == 200):
-        logs = resp.json()
-    return logs
+    try:
+        resp = requests.get("http://127.0.0.1:6000/logs/DataCreation")
+        logs = {}
+        if(resp.status_code == 200):
+            logs = resp.json()
+            return logs
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 @app.route("/logs/Events", methods = ["GET"])
 def logs_events():
-    resp = requests.get("http://127.0.0.1:6000/logs/Events")
-    logs = {}
-    if(resp.status_code == 200):
-        logs = resp.json()
-    return logs
+    try:
+        resp = requests.get("http://127.0.0.1:6000/logs/Events")
+        logs = {}
+        if(resp.status_code == 200):
+            logs = resp.json()
+            return logs
+        else:
+            abort(resp.status_code)
+    except:
+        return jsonify("failure"), 500
 
 
 @app.route("/")

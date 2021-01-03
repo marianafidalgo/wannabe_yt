@@ -45,11 +45,17 @@
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
+                    if (data === "failure") {
+                        handleError(xhr, status, '');
+                    }
                     console.log(data)
                     $("#nviews" + videoID).html(data["views"])
                     $("#nquestions" + videoID).html(data["num_questions"])
                     console.log("update the number of views on the table for" + videoID)
                 },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("Videos process is down :(")
+                }
             })
         }
 
@@ -60,6 +66,9 @@
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
+                    if (data === "failure") {
+                        handleError(xhr, status, '');
+                    }
                     console.log(data);
                     $('#videosTable > tbody:last-child').empty()
                     data["videos"].forEach(v => {
@@ -69,6 +78,9 @@
                         append('<tr> <td>' + v["video_id"] + '</td><td>' + v["description"] + '</td><td id="nviews' + v["video_id"] + '">xxx</td><td id="nquestions' + v["video_id"] + '">0</td></tr>');
                         getVideoInfo(v["video_id"])
                     });
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("Videos process is down :(")
                 }
             });
         }
@@ -94,10 +106,16 @@
                     contentType: 'application/json',
                     data: JSON.stringify(requestData),
                     success: function(data) {
+                        if (data === "failure") {
+                            handleError(xhr, status, '');
+                        }
                         console.log("response for video creation" + data)
                         console.log(data)
                             // after creating the video updates the table
                         updateVideostable()
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        alert("Videos process is down :(")
                     }
                 });
                 // sends request to increment the number of registered videos
@@ -106,7 +124,13 @@
                     type: "PUT",
                     dataType: "json",
                     success: function(data) {
+                        if (data === "failure") {
+                            handleError(xhr, status, '');
+                        }
                         console.log(data)
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        alert("User process is down :(")
                     }
                 });
             }

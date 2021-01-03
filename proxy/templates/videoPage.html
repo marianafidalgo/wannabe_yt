@@ -52,9 +52,15 @@
                 contentType: 'application/json',
                 data: JSON.stringify(requestData),
                 success: function(data) {
+                    if (data === "failure") {
+                        handleError(xhr, status, '');
+                    }
                     console.log("response for question creation" + data)
                     console.log(data)
                     updateQuestiontable()
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("Question process is down :(")
                 }
             });
         }
@@ -74,9 +80,15 @@
                 contentType: 'application/json',
                 data: JSON.stringify(requestData),
                 success: function(data) {
+                    if (data === "failure") {
+                        handleError(xhr, status, '');
+                    }
                     console.log("response for answer creation" + data)
                     console.log(data.question)
                     updateAnswerstable(data.question)
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("Question process is down :(")
                 }
             });
             // sends request to increment the number of answers posted by a specific user
@@ -85,7 +97,13 @@
                 type: "PUT",
                 dataType: "json",
                 success: function(data) {
+                    if (data === "failure") {
+                        handleError(xhr, status, '');
+                    }
                     console.log(data)
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("User process is down :(")
                 }
             });
         }
@@ -97,6 +115,9 @@
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
+                    if (data === "failure") {
+                        handleError(xhr, status, '');
+                    }
                     console.log(data);
                     $('#questionsTable > tbody:last-child').empty()
                     data["QA"].forEach(q => {
@@ -104,6 +125,9 @@
                         $('#questionsTable > tbody:last-child').
                         append('<tr> <td style="width: 25%">' + q["time"] + '</td><td style="width: 65%">' + q["question"] + '</td><td style="text-align:center; "width: 10%;> <input type="radio" name="radioQ" value=' + q["QA_id"] + '> </td></tr>');
                     });
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("Question process is down :(")
                 }
             });
         }
@@ -115,6 +139,9 @@
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
+                    if (data === "failure") {
+                        handleError(xhr, status, '');
+                    }
                     console.log("ola");
                     console.log(data);
                     $('#ansTable > tbody:last-child').empty()
@@ -123,6 +150,9 @@
                         $('#ansTable > tbody:last-child').
                         append('<tr> <td>' + a["user"] + '</td><td>' + a["name"] + '</td><td>' + a["answer"] + '</td></tr>');
                     });
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("Question process is down :(")
                 }
             });
         }
@@ -137,7 +167,13 @@
                 type: "PUT",
                 dataType: "json",
                 success: function(data) {
+                    if (data === "failure") {
+                        handleError(xhr, status, '');
+                    }
                     console.log(data)
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("Videos process is down :(")
                 }
             });
             $.ajax({
@@ -145,7 +181,13 @@
                 type: "PUT",
                 dataType: "json",
                 success: function(data) {
+                    if (data === "failure") {
+                        handleError(xhr, status, '');
+                    }
                     console.log(data)
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("User process is down :(")
                 }
             });
 
@@ -167,6 +209,9 @@
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
+                    if (data === "failure") {
+                        handleError(xhr, status, '');
+                    }
                     console.log(data)
                     url = data["url"]
                     $("#desc").html("Playing: " + data["description"]);
@@ -177,6 +222,9 @@
                         "src": url
                     });
                     vPlayer.play()
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("Videos process is down :(")
                 }
             });
 
@@ -199,8 +247,13 @@
                     type: "PUT",
                     dataType: "json",
                     success: function(data) {
-                        console.log("PUUUT")
+                        if (data === "failure") {
+                            handleError(xhr, status, '');
+                        }
                         console.log(data)
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        alert("Videos process is down :(")
                     }
                 });
 
@@ -209,7 +262,13 @@
                     type: "PUT",
                     dataType: "json",
                     success: function(data) {
+                        if (data === "failure") {
+                            handleError(xhr, status, '');
+                        }
                         console.log(data)
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        alert("User process is down :(")
                     }
                 });
             })
@@ -246,12 +305,18 @@
                     type: "GET",
                     dataType: "json",
                     success: function(data) {
+                        if (data === "failure") {
+                            handleError(xhr, status, '');
+                        }
                         info = data["QA"][0]
                         console.log("cabeçalho")
                         console.log(question_id);
                         console.log(data)
                         document.getElementById("info1").innerHTML = 'Time: ' + info["time"] + ' Question: ' + info["question"];
                         document.getElementById("info2").innerHTML = 'User: ' + info["user"] + ' ' + info["name"];
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        alert("Question process is down :(")
                     }
                 })
             })

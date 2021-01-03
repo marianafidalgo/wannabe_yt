@@ -32,12 +32,18 @@
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
+                    if (data === "failure") {
+                        handleError(xhr, status, '');
+                    }
                     console.log(data);
                     $('#statsTable > tbody:last-child').empty()
                     data["Users"].forEach(s => {
                         $('#statsTable > tbody:last-child').
                         append('<tr> <td>' + s["user"] + '</td><td>' + s["views"] + '</td><td>' + s["questions"] + ' </td><td>' + s["answers"] + ' </td><td>' + s["videos_reg"] + '</td></tr>');
                     });
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("User process is down :(")
                 }
             });
         }

@@ -32,6 +32,9 @@
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
+                    if (data === "failure") {
+                        handleError(xhr, status, '');
+                    }
                     console.log(data);
                     $('#dataCreationTable > tbody:last-child').empty()
                     data["DataCreation"].forEach(dc => {
@@ -39,6 +42,9 @@
                         $('#dataCreationTable > tbody:last-child').
                         append('<tr> <td>' + dc["timestamp"] + '</td><td>' + dc["user"] + '</td><td>' + dc["content"] + ' </td><td>' + dc["data_type"] + '</td></tr>');
                     });
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("Logs process is down :(")
                 }
             });
         }
@@ -50,12 +56,18 @@
                 type: "GET",
                 dataType: "json",
                 success: function(data) {
+                    if (data === "failure") {
+                        handleError(xhr, status, '');
+                    }
                     console.log(data);
                     $('#eventsTable > tbody:last-child').empty()
                     data["Events"].forEach(e => {
                         $('#eventsTable > tbody:last-child').
                         append('<tr> <td>' + e["timestamp"] + '</td><td>' + e["url"] + '</td></tr>');
                     });
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("Logs process is down :(")
                 }
             });
         }
