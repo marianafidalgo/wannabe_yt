@@ -24,31 +24,23 @@ def log_request_info():
         requests.post("http://127.0.0.1:6000/logs/Events", json = data)
 
 # USER process
-
 @app.route("/login")
 def login():
     url = "http://127.0.0.1:5000"
     try:
         code = urllib.request.urlopen(url).getcode()
         if code == 200:
-            print('Web site exists')
+            print('Login site exists')
             return redirect(url)
     except:
-        print('Web site does not exist')
+        print('Login does not exist')
         return "fail"
 
 
 @app.route('/logout')
 def logout():
     url = "http://127.0.0.1:5000/logout"
-    try:
-        code = urllib.request.urlopen(url).getcode()
-        if code == 200:
-            print('Web site exists')
-            return redirect(url)
-    except:
-        print('Web site does not exist')
-        return "fail"
+    return redirect(url)
 
 @app.route("/stats", methods = ["GET"])
 def stats():
@@ -124,7 +116,7 @@ def logged_In(id, name):
         user = {}
         if(resp.status_code == 200):
             user = resp.json()
-            return render_template("videoListing.html", id = id, name = name, role = user["User"][0]["role"])
+            return render_template("videoListing.html", id = id, name = name, role = user["User"]["role"])
         else:
             abort(resp.status_code)
     except:
@@ -132,7 +124,7 @@ def logged_In(id, name):
 
 @app.route("/logged_In/<user>/videoPage.html/<id>/<name>")
 def logged_In_vid(user, id, name):
-     try:
+    try:
         return render_template("videoPage.html", user = user, name = name, id = id)
     except:
         print('Web site does not exist')
@@ -145,7 +137,7 @@ def go_to_logs(id):
         user = {}
         if(resp.status_code == 200):
             user = resp.json()
-            return render_template("logs.html", role = user["User"][0]["role"])
+            return render_template("logs.html", role = user["User"]["role"])
         else:
             abort(resp.status_code)
     except:
@@ -158,7 +150,7 @@ def go_to_stats(id):
         user = {}
         if(resp.status_code == 200):
             user = resp.json()
-            return render_template("stats.html", role = user["User"][0]["role"])
+            return render_template("stats.html", role = user["User"]["role"])
         else:
             abort(resp.status_code)
     except:
@@ -175,7 +167,16 @@ def videos():
         else:
             abort(resp.status_code)
     except:
-        return jsonify("failure"), 500
+        try:
+            resp = requests.get("http://127.0.0.1:3000/videos")
+            videos = {}
+            if(resp.status_code == 200):
+                videos = resp.json()
+                return videos
+            else:
+                abort(resp.status_code)
+        except:
+            return jsonify("failure"), 500
 
 @app.route("/videos", methods = ["POST"])
 def new_video():
@@ -188,7 +189,16 @@ def new_video():
         else:
             abort(resp.status_code)
     except:
-        return jsonify("failure"), 500
+        try:
+            j = request.get_json()
+            resp = requests.post("http://127.0.0.1:3000/videos", json = j)
+            if(resp.status_code == 200):
+                videos = resp.json()
+                return str(resp.status_code)
+            else:
+                abort(resp.status_code)
+        except:
+            return jsonify("failure"), 500
 
 @app.route("/videos/<id>", methods = ["GET"])
 def video(id):
@@ -201,7 +211,16 @@ def video(id):
         else:
             abort(resp.status_code)
     except:
-        return jsonify("failure"), 500
+        try:
+            resp = requests.get("http://127.0.0.1:3000/videos/" + id)
+            video = {}
+            if(resp.status_code == 200):
+                video = resp.json()
+                return video
+            else:
+                abort(resp.status_code)
+        except:
+            return jsonify("failure"), 500
 
 @app.route("/videos/<id>/views", methods = ['PUT', 'PATCH'])
 def video_views(id):
@@ -214,7 +233,16 @@ def video_views(id):
         else:
             abort(resp.status_code)
     except:
-        return jsonify("failure"), 500
+        try:
+            resp = requests.put("http://127.0.0.1:3000/videos/" + id + "/views")
+            num_vw = {}
+            if(resp.status_code == 200):
+                num_vw = resp.json()
+                return num_vw
+            else:
+                abort(resp.status_code)
+        except:
+            return jsonify("failure"), 500
 
 @app.route("/videos/<id>/questions", methods = ['PUT', 'PATCH'])
 def num_questions(id,):
@@ -227,7 +255,16 @@ def num_questions(id,):
         else:
             abort(resp.status_code)
     except:
-        return jsonify("failure"), 500
+        try:
+            resp = requests.put("http://127.0.0.1:3000/videos/" + id + "/questions")
+            num_q = {}
+            if(resp.status_code == 200):
+                num_q = resp.json()
+                return num_q
+            else:
+                abort(resp.status_code)
+        except:
+            return jsonify("failure"), 500
 
 # QA process
 

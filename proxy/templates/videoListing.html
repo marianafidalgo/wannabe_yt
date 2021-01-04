@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html>
-
-<head>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.css">
     <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.7/dist/semantic.js">
@@ -16,7 +14,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<head>
 
+    <link rel="icon" type="image/png" href="http://127.0.0.1:4000/static/icon.ico" />
     <style>
         body {
             margin: 0 auto;
@@ -53,6 +53,7 @@
     </style>
 
     <script>
+        
         var n = '{{name}}'
         var id = '{{id}}'
 
@@ -103,7 +104,7 @@
                         console.log(v["video_id"] + " " + v["description"])
                             // fills the videos table
                         $('#videosTable > tbody:last-child').
-                        append('<tr> <td>' + v["video_id"] + '</td><td>' + v["description"] + '</td><td id="nviews' + v["video_id"] + '">xxx</td><td id="nquestions' + v["video_id"] + '">0</td></tr>');
+                        append('<tr> <td>' + v["video_id"] + '</td><td>' + v["description"] + '</td><td id="nviews' + v["video_id"] + '">0</td><td id="nquestions' + v["video_id"] + '">0</td></tr>');
                         getVideoInfo(v["video_id"])
                     });
                 },

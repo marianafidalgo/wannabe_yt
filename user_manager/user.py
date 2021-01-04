@@ -49,6 +49,7 @@ def home_page():
         #resp contains the response made to /api/fenix/vi/person (information about current user)
         data = resp.json()
         #send to DB
+       # try:
         if(getUser(data["username"]) is None):
             ret = False
             try:
@@ -59,10 +60,10 @@ def home_page():
             except:
                 abort(400)
         #send to proxy!!!
-        print("hereeeeeeeee|||")
         url = "http://127.0.0.1:4000/logged_In/"+ data['username']+'/'+data['name']
         return redirect(url)
-
+        # except:
+        #     None
 
 @app.route('/user/<id>/<name>',methods=['GET','POST'])
 def user(id, name):
@@ -75,7 +76,10 @@ def user(id, name):
 
 @app.route('/logout')
 def logout():
-    del fenix_blueprint.token
+    try:
+        del fenix_blueprint.token
+    except:
+        pass
     return redirect("http://127.0.0.1:4000/")
 
 @app.route("/stats/views/<user>", methods=['PUT', 'PATCH'])
