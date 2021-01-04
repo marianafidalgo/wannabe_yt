@@ -337,7 +337,7 @@
 
             // go back to previous page
             $("#buttonGoBack").click(function() {
-                window.history.back()
+                location.replace(document.referrer);
             })
         });
     </script>
